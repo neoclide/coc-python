@@ -90,7 +90,7 @@ export class LanguageServerAnalysisOptions implements ILanguageServerAnalysisOpt
     }
 
     // tslint:disable-next-line:no-string-literal
-    properties['DatabasePath'] = path.join(this.context.extensionPath, this.languageServerFolder)
+    properties['DatabasePath'] = path.resolve(this.context.storagePath, this.languageServerFolder)
 
     const vars = await this.envVarsProvider.getEnvironmentVariables()
     this.envPythonPath = vars.PYTHONPATH || ''

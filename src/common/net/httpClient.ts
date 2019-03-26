@@ -17,8 +17,8 @@ export class HttpClient implements IHttpClient {
 
   public async downloadFile(uri: string): Promise<requestTypes.Request> {
     // tslint:disable-next-line:no-any
-    const request = await import('request') as any as typeof requestTypes
-    return request(uri, this.requestOptions)
+    const request = await import('request') as any
+    return request.default(uri, this.requestOptions)
   }
   public async getJSON<T>(uri: string): Promise<T> {
     // tslint:disable-next-line:no-require-imports

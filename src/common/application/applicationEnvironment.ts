@@ -31,6 +31,6 @@ export class ApplicationEnvironment implements IApplicationEnvironment {
   // tslint:disable-next-line:no-any
   public get packageJson(): any {
     // tslint:disable-next-line:non-literal-require no-require-imports
-    return require('../../../../package.json')
+    return require('../../../package.json')
   }
 }

@@ -1,6 +1,7 @@
 {
   "name": "coc-python",
   "version": "1.0.0",
+  "languageServerVersion": "0.1.80",
   "description": "Python extension for coc.nvim, forked from vscode-python.",
   "main": "lib/index.js",
   "publisher": "chemzqm",
@@ -262,7 +263,7 @@
         },
         "python.jediEnabled": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "Enables Jedi as IntelliSense engine instead of Microsoft Python Analysis Engine.",
           "scope": "resource"
         },
