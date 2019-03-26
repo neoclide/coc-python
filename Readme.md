@@ -5,6 +5,9 @@ Python extension for [coc.nvim](https://github.com/neoclide/coc.nvim), fork of
 
 Basic working, but still **W.I.P**.
 
+**Note:** lastest master of [coc.nvim](https://github.com/neoclide/coc.nvim)
+required to make it work.
+
 Built with rich support for the Python language (for all actively supported
 versions of the language: 2.7, >=3.5), including features such as linting,
 IntelliSense, code navigation, code formatting, refactoring, unit tests,
