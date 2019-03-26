@@ -5,10 +5,8 @@
 
 import { workspace, WorkspaceConfiguration } from 'coc.nvim'
 import * as fs from 'fs'
-import * as path from 'path'
 import { promisify } from 'util'
 import './common/extensions'
-import { EXTENSION_ROOT_DIR } from './constants'
 
 // tslint:disable:no-require-imports
 const setting = 'sourceMapsEnabled'
@@ -22,15 +20,15 @@ export class SourceMapSupport {
     if (!this.enabled) {
       return
     }
-    await this.enableSourceMaps(true)
-    const localize = require('./common/utils/localize') as typeof import('./common/utils/localize')
-    // const disable = localize.Diagnostics.disableSourceMaps()
-    // tslint:disable-next-line: no-floating-promises
-    workspace.showPrompt(localize.Diagnostics.warnSourceMaps() + ', disable?').then(res => {
-      if (res) {
-        this.disable().ignoreErrors()
-      }
-    })
+    // await this.enableSourceMaps(true)
+    // const localize = require('./common/utils/localize') as typeof import('./common/utils/localize')
+    // // const disable = localize.Diagnostics.disableSourceMaps()
+    // // tslint:disable-next-line: no-floating-promises
+    // workspace.showPrompt(localize.Diagnostics.warnSourceMaps() + ', disable?').then(res => {
+    //   if (res) {
+    //     this.disable().ignoreErrors()
+    //   }
+    // })
   }
   public get enabled(): boolean {
     return this.config.get<boolean>(setting, false)
@@ -42,9 +40,9 @@ export class SourceMapSupport {
     await this.enableSourceMaps(false)
   }
   protected async enableSourceMaps(enable: boolean) {
-    const extensionSourceFile = path.join(EXTENSION_ROOT_DIR, 'lib', 'index.js')
-    const debuggerSourceFile = path.join(EXTENSION_ROOT_DIR, 'out', 'client', 'debugger', 'debugAdapter', 'main.js')
-    await Promise.all([this.enableSourceMap(enable, extensionSourceFile), this.enableSourceMap(enable, debuggerSourceFile)])
+    // const extensionSourceFile = path.join(EXTENSION_ROOT_DIR, 'lib', 'index.js')
+    // const debuggerSourceFile = path.join(EXTENSION_ROOT_DIR, 'out', 'client', 'debugger', 'debugAdapter', 'main.js')
+    // await Promise.all([this.enableSourceMap(enable, extensionSourceFile), this.enableSourceMap(enable, debuggerSourceFile)])
   }
   protected async enableSourceMap(enable: boolean, sourceFile: string) {
     const sourceMapFile = `${sourceFile}.map`
