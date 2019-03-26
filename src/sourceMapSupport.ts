@@ -63,11 +63,11 @@ export class SourceMapSupport {
   }
 }
 export function initialize() {
-  if (!workspace.getConfiguration('python.diagnostics', null).get('sourceMapsEnabled', false)) {
-    new SourceMapSupport().disable().ignoreErrors()
-    return
-  }
-  new SourceMapSupport().initialize().catch(_ex => {
-    console.error('Failed to initialize source map support in extension')
-  })
+  // if (!workspace.getConfiguration('python.diagnostics', null).get('sourceMapsEnabled', false)) {
+  //   new SourceMapSupport().disable().ignoreErrors()
+  //   return
+  // }
+  // new SourceMapSupport().initialize().catch(_ex => {
+  //   console.error('Failed to initialize source map support in extension')
+  // })
 }
