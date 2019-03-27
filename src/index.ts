@@ -117,7 +117,7 @@ async function activateUnsafe(context: ExtensionContext): Promise<IExtensionApi>
 
   const workspaceService = serviceContainer.get<IWorkspaceService>(IWorkspaceService)
   const interpreterManager = serviceContainer.get<IInterpreterService>(IInterpreterService)
-  interpreterManager.refresh(Uri.parse(workspaceService.workspaceFolders![0].uri))
+  interpreterManager.refresh(Uri.file(workspace.rootPath))
     // tslint:disable-next-line: no-console
     .catch(ex => console.error('Python Extension: interpreterManager.refresh', ex))
 

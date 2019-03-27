@@ -106,7 +106,8 @@ export class WorkspaceSymbols implements Disposable {
           continue
         } else {
           const installer = this.serviceContainer.get<IInstaller>(IInstaller)
-          promptPromise = installer.promptToInstall(Product.ctags, Uri.parse(this.workspace.workspaceFolders![0]!.uri))
+          const uri = this.workspace.hasWorkspaceFolders ? Uri.parse(this.workspace.workspaceFolders![0]!.uri) : undefined
+          promptPromise = installer.promptToInstall(Product.ctags, uri)
           promptResponse = await promptPromise
         }
         if (promptResponse !== InstallerResponse.Installed || (!token || token.isCancellationRequested)) {

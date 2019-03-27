@@ -96,7 +96,7 @@ export class PythonSettings implements IPythonSettings {
   // tslint:disable-next-line:type-literal-delimiter
   public static getSettingsUriAndTarget(resource: Uri | undefined, workspace?: IWorkspaceService): { uri: Uri | undefined, target: ConfigurationTarget } {
     workspace = workspace || new WorkspaceService()
-    const workspaceFolder = workspace.workspaceFolders[0]
+    const workspaceFolder = workspace.hasWorkspaceFolders ? workspace.workspaceFolders[0] : undefined
     let workspaceFolderUri: Uri | undefined = workspaceFolder ? Uri.parse(workspaceFolder.uri) : undefined
 
     const target = workspaceFolderUri ? ConfigurationTarget.Workspace : ConfigurationTarget.Global
