@@ -8,7 +8,6 @@ import { ConfigurationChangeEvent, workspace } from 'coc.nvim'
 import { DiagnosticSeverity } from 'vscode-languageserver-protocol'
 import Uri from 'vscode-uri'
 import { IWorkspaceService } from '../../../common/application/types'
-import '../../../common/extensions'
 import { IPlatformService } from '../../../common/platform/types'
 import { IConfigurationService, IDisposableRegistry, Resource } from '../../../common/types'
 import { IInterpreterHelper, IInterpreterService, InterpreterType } from '../../../interpreter/contracts'
@@ -134,7 +133,9 @@ export class InvalidMacPythonInterpreterService extends BaseDiagnosticsService {
       this.timeOut = undefined
       this.diagnose(Uri.parse(workspace.rootPath))
         .then(diagnostics => this.handle(diagnostics))
-        .ignoreErrors()
+        .catch(() => {
+          // noop
+        })
     }, this.changeThrottleTimeout)
   }
   private getCommandPrompts(diagnostic: IDiagnostic): { prompt: string; command?: IDiagnosticCommand }[] {

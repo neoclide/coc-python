@@ -7,7 +7,6 @@ import { Disposable, Emitter, Event, Uri, workspace } from 'coc.nvim'
 import { inject, injectable } from 'inversify'
 import { ICommandManager, IDocumentManager } from '../../common/application/types'
 import { Commands } from '../../common/constants'
-import '../../common/extensions'
 import { IFileSystem } from '../../common/platform/types'
 import { IDisposableRegistry } from '../../common/types'
 import { noop } from '../../common/utils/misc'
@@ -43,16 +42,16 @@ export class CodeExecutionManager implements ICodeExecutionManager {
     if (!fileToExecute) {
       return
     }
-    await workspace.nvim.command('wa')
+    await workspace.nvim.command('noa wa')
 
-    try {
-      const contents = await this.fileSystem.readFile(fileToExecute.fsPath)
-      this.eventEmitter.fire(contents)
-    } catch {
-      // Ignore any errors that occur for firing this event. It's only used
-      // for telemetry
-      noop()
-    }
+    // try {
+    //   const contents = await this.fileSystem.readFile(fileToExecute.fsPath)
+    //   this.eventEmitter.fire(contents)
+    // } catch {
+    //   // Ignore any errors that occur for firing this event. It's only used
+    //   // for telemetry
+    //   noop()
+    // }
 
     const executionService = this.serviceContainer.get<ICodeExecutionService>(ICodeExecutionService, 'standard')
     await executionService.executeFile(fileToExecute)
@@ -63,7 +62,7 @@ export class CodeExecutionManager implements ICodeExecutionManager {
 
     await this.executeSelection(executionService)
     // Prompt one time to ask if they want to send shift-enter to the Interactive Window
-    // this.shiftEnterBanner.showBanner().ignoreErrors()
+    // this.shiftEnterBanner.showBanner().catch(emptyFn)
   }
 
   private async executeSelectionInDjangoShell(): Promise<void> {

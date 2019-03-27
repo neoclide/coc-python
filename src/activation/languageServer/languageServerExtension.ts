@@ -6,7 +6,6 @@
 import { inject, injectable } from 'inversify'
 import { Event, Emitter } from 'vscode-languageserver-protocol'
 import { ICommandManager } from '../../common/application/types'
-import '../../common/extensions'
 import { IDisposable } from '../../common/types'
 import { ILanguageServerExtension } from '../types'
 

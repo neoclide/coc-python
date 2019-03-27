@@ -8,6 +8,7 @@ import { IServiceContainer } from '../../ioc/types'
 import { ExecutionInfo, IConfigurationService } from '../types'
 import { ModuleInstaller } from './moduleInstaller'
 import { IModuleInstaller } from './types'
+import { toCommandArgument, fileToCommandArgument } from '../string'
 
 /**
  * A Python module installer for a conda environment.
@@ -65,11 +66,11 @@ export class CondaInstaller extends ModuleInstaller implements IModuleInstaller 
     if (info && info.name) {
       // If we have the name of the conda environment, then use that.
       args.push('--name')
-      args.push(info.name!.toCommandArgument())
+      args.push(toCommandArgument(info.name!))
     } else if (info && info.path) {
       // Else provide the full path to the environment path.
       args.push('--prefix')
-      args.push(info.path.fileToCommandArgument())
+      args.push(fileToCommandArgument(info.path))
     }
     args.push(moduleName)
     return {

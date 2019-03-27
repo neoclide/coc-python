@@ -10,6 +10,7 @@ import { ILogger, IOutputChannel, Resource } from '../../common/types'
 import { IServiceContainer } from '../../ioc/types'
 import { IApplicationDiagnostics } from '../types'
 import { IDiagnostic, IDiagnosticsService, ISourceMapSupportService } from './types'
+import { emptyFn } from '../../common/function'
 
 @injectable()
 export class ApplicationDiagnostics implements IApplicationDiagnostics {
@@ -29,7 +30,7 @@ export class ApplicationDiagnostics implements IApplicationDiagnostics {
     // Perform these validation checks in the foreground.
     await this.runDiagnostics(services.filter(item => !item.runInBackground), resource)
     // Perform these validation checks in the background.
-    this.runDiagnostics(services.filter(item => item.runInBackground), resource).ignoreErrors()
+    this.runDiagnostics(services.filter(item => item.runInBackground), resource).catch(emptyFn)
   }
   private async runDiagnostics(diagnosticServices: IDiagnosticsService[], resource: Resource): Promise<void> {
     await Promise.all(diagnosticServices.map(async diagnosticService => {

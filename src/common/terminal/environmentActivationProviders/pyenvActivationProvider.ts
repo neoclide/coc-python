@@ -8,6 +8,7 @@ import Uri from 'vscode-uri'
 import { IInterpreterService, InterpreterType } from '../../../interpreter/contracts'
 import { IServiceContainer } from '../../../ioc/types'
 import { ITerminalActivationCommandProvider, TerminalShellType } from '../types'
+import { toCommandArgument } from '../../string'
 
 @injectable()
 export class PyEnvActivationCommandProvider implements ITerminalActivationCommandProvider {
@@ -23,7 +24,7 @@ export class PyEnvActivationCommandProvider implements ITerminalActivationComman
       return
     }
 
-    return [`pyenv shell ${interpreter.envName.toCommandArgument()}`]
+    return [`pyenv shell ${toCommandArgument(interpreter.envName)}`]
   }
 
   public async getActivationCommandsForInterpreter(pythonPath: string, _targetShell: TerminalShellType): Promise<string[] | undefined> {
@@ -32,7 +33,7 @@ export class PyEnvActivationCommandProvider implements ITerminalActivationComman
       return
     }
 
-    return [`pyenv shell ${interpreter.envName.toCommandArgument()}`]
+    return [`pyenv shell ${toCommandArgument(interpreter.envName)}`]
   }
 
 }

@@ -16,6 +16,7 @@ import { debounce } from '../../common/utils/decorators'
 import { IEnvironmentVariablesProvider } from '../../common/variables/types'
 import { IInterpreterService } from '../../interpreter/contracts'
 import { ILanguageServerAnalysisOptions, ILanguageServerFolderService } from '../types'
+import { emptyFn } from '../../common/function'
 
 @injectable()
 export class LanguageServerAnalysisOptions implements ILanguageServerAnalysisOptions {
@@ -139,7 +140,7 @@ export class LanguageServerAnalysisOptions implements ILanguageServerAnalysisOpt
       },
       middleware: {
         provideCompletionItem: (document: TextDocument, position: Position, context: CompletionContext, token: CancellationToken, next: ProvideCompletionItemsSignature) => {
-          this.surveyBanner.showBanner().ignoreErrors()
+          this.surveyBanner.showBanner().catch(emptyFn)
           return next(document, position, context, token)
         }
       }
@@ -185,7 +186,7 @@ export class LanguageServerAnalysisOptions implements ILanguageServerAnalysisOpt
   }
   @debounce(1000)
   protected onSettingsChanged(): void {
-    this.notifyIfSettingsChanged().ignoreErrors()
+    this.notifyIfSettingsChanged().catch(emptyFn)
   }
   @traceDecorators.verbose('Changes in python settings detected in analysis options')
   protected async notifyIfSettingsChanged(): Promise<void> {
@@ -212,7 +213,7 @@ export class LanguageServerAnalysisOptions implements ILanguageServerAnalysisOpt
 
   @debounce(1000)
   protected onEnvVarChange(): void {
-    this.notifyifEnvPythonPathChanged().ignoreErrors()
+    this.notifyifEnvPythonPathChanged().catch(emptyFn)
   }
 
   protected async notifyifEnvPythonPathChanged(): Promise<void> {

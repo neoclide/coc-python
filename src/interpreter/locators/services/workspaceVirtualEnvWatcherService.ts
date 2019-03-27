@@ -7,12 +7,12 @@ import { inject, injectable } from 'inversify'
 import * as path from 'path'
 import { Disposable, Event, Emitter, FileSystemWatcher, Uri } from 'coc.nvim'
 import { IWorkspaceService } from '../../../common/application/types'
-import '../../../common/extensions'
 import { Logger, traceDecorators } from '../../../common/logger'
 import { IPlatformService } from '../../../common/platform/types'
 import { IPythonExecutionFactory } from '../../../common/process/types'
 import { IDisposableRegistry } from '../../../common/types'
 import { IInterpreterWatcher } from '../../contracts'
+import { emptyFn } from '../../../common/function'
 
 const maxTimeToWaitForEnvCreation = 60_000
 const timeToPollForEnvCreation = 2_000
@@ -60,7 +60,7 @@ export class WorkspaceVirtualEnvWatcherService implements IInterpreterWatcher, D
     this.didCreate.fire()
     // On Windows, creation of environments are very slow, hence lets notify again after
     // the python executable is accessible (i.e. when we can launch the process).
-    this.notifyCreationWhenReady(e.fsPath).ignoreErrors()
+    this.notifyCreationWhenReady(e.fsPath).catch(emptyFn)
   }
   protected async notifyCreationWhenReady(pythonPath: string) {
     const counter = this.timers.has(pythonPath) ? this.timers.get(pythonPath)!.counter + 1 : 0
@@ -78,7 +78,7 @@ export class WorkspaceVirtualEnvWatcherService implements IInterpreterWatcher, D
       return
     }
 
-    const timer = setTimeout(() => this.notifyCreationWhenReady(pythonPath).ignoreErrors(), timeToPollForEnvCreation)
+    const timer = setTimeout(() => this.notifyCreationWhenReady(pythonPath).catch(emptyFn), timeToPollForEnvCreation)
     this.timers.set(pythonPath, { timer, counter })
   }
   private clearTimers() {

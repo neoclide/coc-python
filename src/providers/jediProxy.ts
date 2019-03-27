@@ -10,7 +10,6 @@ import path from 'path'
 import * as pidusage from 'pidusage'
 import { CancellationToken, CancellationTokenSource, CompletionItemKind, Disposable, SymbolKind } from 'vscode-languageserver-protocol'
 import { isTestExecution } from '../common/constants'
-import '../common/extensions'
 import { IS_WINDOWS } from '../common/platform/constants'
 import { IPythonExecutionFactory } from '../common/process/types'
 import { BANNER_NAME_PROPOSE_LS, IConfigurationService, ILogger, IPythonExtensionBanner, IPythonSettings } from '../common/types'
@@ -21,6 +20,8 @@ import { IEnvironmentVariablesProvider } from '../common/variables/types'
 import { IInterpreterService } from '../interpreter/contracts'
 import { IServiceContainer } from '../ioc/types'
 import { Logger } from './../common/logger'
+import { splitLines } from '../common/string'
+import { emptyFn } from '../common/function'
 
 const pythonVSCodeTypeMappings = new Map<string, CompletionItemKind>()
 pythonVSCodeTypeMappings.set('none', CompletionItemKind.Value)
@@ -163,11 +164,11 @@ export class JediProxy implements Disposable {
     const disposable = interpreterService.onDidChangeInterpreter(this.onDidChangeInterpreter.bind(this))
     this.disposables.push(disposable)
     this.initialized = createDeferred<void>()
-    this.startLanguageServer().then(() => this.initialized.resolve()).ignoreErrors()
+    this.startLanguageServer().then(() => this.initialized.resolve()).catch(emptyFn)
 
     this.proposeNewLanguageServerPopup = serviceContainer.get<IPythonExtensionBanner>(IPythonExtensionBanner, BANNER_NAME_PROPOSE_LS)
 
-    this.checkJediMemoryFootprint().ignoreErrors()
+    this.checkJediMemoryFootprint().catch(emptyFn)
   }
 
   private static getProperty<T>(o: object, name: string): T {
@@ -292,7 +293,7 @@ export class JediProxy implements Disposable {
     }
     this.lastKnownPythonInterpreter = this.pythonSettings.pythonPath
     this.additionalAutoCompletePaths = await this.buildAutoCompletePaths()
-    this.restartLanguageServer().ignoreErrors()
+    this.restartLanguageServer().catch(emptyFn)
   }
   // @debounce(1500)
   @swallowExceptions('JediProxy')
@@ -300,7 +301,7 @@ export class JediProxy implements Disposable {
     const newAutoComletePaths = await this.buildAutoCompletePaths()
     if (this.additionalAutoCompletePaths.join(',') !== newAutoComletePaths.join(',')) {
       this.additionalAutoCompletePaths = newAutoComletePaths
-      this.restartLanguageServer().ignoreErrors()
+      this.restartLanguageServer().catch(emptyFn)
     }
   }
   @swallowExceptions('JediProxy')
@@ -389,7 +390,7 @@ export class JediProxy implements Disposable {
         // tslint:disable-next-line:no-any
         let responses: any[]
         try {
-          responses = dataStr.splitLines().map(resp => JSON.parse(resp))
+          responses = splitLines(dataStr).map(resp => JSON.parse(resp))
           this.previousData = ''
         } catch (ex) {
           // Possible we've only received part of the data, hence don't clear previousData.
@@ -626,7 +627,7 @@ export class JediProxy implements Disposable {
     try {
       const pythonProcess = await this.serviceContainer.get<IPythonExecutionFactory>(IPythonExecutionFactory).create({ resource: Uri.file(this.workspacePath) })
       const result = await pythonProcess.exec(args, { cwd: this.workspacePath })
-      const lines = result.stdout.trim().splitLines()
+      const lines = splitLines(result.stdout.trim())
       if (lines.length === 0) {
         return ''
       }

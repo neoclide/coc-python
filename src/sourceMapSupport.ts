@@ -6,7 +6,6 @@
 import { workspace, WorkspaceConfiguration } from 'coc.nvim'
 import * as fs from 'fs'
 import { promisify } from 'util'
-import './common/extensions'
 
 // tslint:disable:no-require-imports
 const setting = 'sourceMapsEnabled'
@@ -26,7 +25,7 @@ export class SourceMapSupport {
     // // tslint:disable-next-line: no-floating-promises
     // workspace.showPrompt(localize.Diagnostics.warnSourceMaps() + ', disable?').then(res => {
     //   if (res) {
-    //     this.disable().ignoreErrors()
+    //     this.disable().catch(emptyFn)
     //   }
     // })
   }
@@ -64,7 +63,7 @@ export class SourceMapSupport {
 }
 export function initialize() {
   // if (!workspace.getConfiguration('python.diagnostics', null).get('sourceMapsEnabled', false)) {
-  //   new SourceMapSupport().disable().ignoreErrors()
+  //   new SourceMapSupport().disable().catch(emptyFn)
   //   return
   // }
   // new SourceMapSupport().initialize().catch(_ex => {

@@ -6,12 +6,12 @@ import { Terminal } from 'coc.nvim'
 import Uri from 'vscode-uri'
 import { ICondaService, IInterpreterService, PythonInterpreter } from '../../interpreter/contracts'
 import { ITerminalManager, IWorkspaceService } from '../application/types'
-import '../extensions'
 import { traceDecorators, traceError } from '../logger'
 import { IPlatformService } from '../platform/types'
 import { IConfigurationService, Resource } from '../types'
 import { OSType } from '../utils/platform'
 import { ITerminalActivationCommandProvider, ITerminalHelper, TerminalActivationProviders, TerminalShellType } from './types'
+import { fileToCommandArgument } from '../string'
 
 // Types of shells can be found here:
 // 1. https://wiki.ubuntu.com/ChangingShells
@@ -101,7 +101,7 @@ export class TerminalHelper implements ITerminalHelper {
   public buildCommandForTerminal(terminalShellType: TerminalShellType, command: string, args: string[]): string {
     const isPowershell = terminalShellType === TerminalShellType.powershell || terminalShellType === TerminalShellType.powershellCore
     const commandPrefix = isPowershell ? '& ' : ''
-    return `${commandPrefix}${command.fileToCommandArgument()} ${args.join(' ')}`.trim()
+    return `${commandPrefix}${fileToCommandArgument(command)} ${args.join(' ')}`.trim()
   }
   public async getEnvironmentActivationCommands(terminalShellType: TerminalShellType, resource?: Uri): Promise<string[] | undefined> {
     const providers = [this.pipenv, this.pyenv, this.bashCShellFish, this.commandPromptAndPowerShell]

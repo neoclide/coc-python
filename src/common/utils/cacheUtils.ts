@@ -6,7 +6,6 @@
 // tslint:disable:no-any no-require-imports
 
 import Uri from 'vscode-uri'
-import '../extensions'
 import { workspace } from 'coc.nvim'
 import { Resource } from '../types'
 

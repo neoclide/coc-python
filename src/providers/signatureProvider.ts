@@ -16,6 +16,7 @@ import {
 import { JediFactory } from '../languageServices/jediProxyFactory'
 import * as proxy from './jediProxy'
 import { isPositionInsideStringOrComment } from './providerUtilities'
+import { splitLines } from '../common/string'
 
 const DOCSTRING_PARAM_PATTERNS = [
   '\\s*:type\\s*PARAMNAME:\\s*([^\\n, ]+)', // Sphinx
@@ -76,7 +77,7 @@ export class PythonSignatureProvider implements SignatureHelpProvider {
         const validParamInfo = def.params && def.params.length > 0 && def.docstring && def.docstring.startsWith(`${def.name}(`)
 
         if (validParamInfo) {
-          const docLines = def.docstring.splitLines()
+          const docLines = splitLines(def.docstring)
           label = docLines.shift()!.trim()
           documentation = docLines.join(EOL).trim()
         } else {

@@ -2,7 +2,6 @@ import { inject, injectable } from 'inversify'
 import md5 from 'md5'
 import path from 'path'
 import { workspace, Disposable, events, Event, Emitter, Uri } from 'coc.nvim'
-import '../common/extensions'
 import { IDocumentManager, IWorkspaceService } from '../common/application/types'
 import { getArchitectureDisplayName } from '../common/platform/registry'
 import { IFileSystem } from '../common/platform/types'
@@ -16,6 +15,7 @@ import {
   InterpreterType, PythonInterpreter
 } from './contracts'
 import { IVirtualEnvironmentManager } from './virtualEnvs/types'
+import { emptyFn } from '../common/function'
 
 const EXPITY_DURATION = 24 * 60 * 60 * 1000
 
@@ -75,7 +75,7 @@ export class InterpreterService implements Disposable, IInterpreterService {
         item.displayName = await this.getDisplayName(item, resource)
         // Keep information up to date with latest details.
         if (!item.cachedEntry) {
-          this.updateCachedInterpreterInformation(item, resource).ignoreErrors()
+          this.updateCachedInterpreterInformation(item, resource).catch(emptyFn)
         }
       }))
     return interpreters
@@ -161,7 +161,7 @@ export class InterpreterService implements Disposable, IInterpreterService {
         if (info && (info as any).__store) {
           await this.updateCachedInterpreterInformation(info, resource)
         }
-      }).ignoreErrors()
+      }).catch(emptyFn)
     }
     return interpreterInfo
   }

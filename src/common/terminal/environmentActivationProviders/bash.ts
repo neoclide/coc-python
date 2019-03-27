@@ -3,9 +3,9 @@
 
 import { inject, injectable } from 'inversify'
 import { IServiceContainer } from '../../../ioc/types'
-import '../../extensions'
 import { TerminalShellType } from '../types'
 import { BaseActivationCommandProvider } from './baseActivationProvider'
+import { fileToCommandArgument } from '../../string'
 
 @injectable()
 export class Bash extends BaseActivationCommandProvider {
@@ -27,7 +27,7 @@ export class Bash extends BaseActivationCommandProvider {
     if (!scriptFile) {
       return
     }
-    return [`source ${scriptFile.fileToCommandArgument()}`]
+    return [`source ${fileToCommandArgument(scriptFile)}`]
   }
 
   private getScriptsInOrderOfPreference(targetShell: TerminalShellType): string[] {

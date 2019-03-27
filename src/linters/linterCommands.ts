@@ -9,6 +9,7 @@ import { IDisposable } from '../common/types'
 import { Linters } from '../common/utils/localize'
 import { IServiceContainer } from '../ioc/types'
 import { ILinterManager, ILintingEngine } from './types'
+import { format } from '../common/string'
 
 export class LinterCommands implements IDisposable {
   private disposables: Disposable[] = []
@@ -56,7 +57,7 @@ export class LinterCommands implements IDisposable {
       } else {
         const index = linters.findIndex(x => x.id === selection)
         if (activeLinters.length > 1) {
-          const response = await workspace.showPrompt(Linters.replaceWithSelectedLinter().format(selection))
+          const response = await workspace.showPrompt(format(Linters.replaceWithSelectedLinter(), selection))
           if (!response) return
         }
         await this.linterManager.setActiveLintersAsync([linters[index].product], this.settingsUri)

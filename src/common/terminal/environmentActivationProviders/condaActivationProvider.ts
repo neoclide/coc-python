@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 'use strict'
-import '../../extensions'
 
 import { inject, injectable } from 'inversify'
 import * as path from 'path'
@@ -11,6 +10,7 @@ import { ICondaService } from '../../../interpreter/contracts'
 import { IPlatformService } from '../../platform/types'
 import { IConfigurationService } from '../../types'
 import { ITerminalActivationCommandProvider, TerminalShellType } from '../types'
+import { fileToCommandArgument, toCommandArgument } from '../../string'
 
 // Version number of conda that requires we call activate with 'conda activate' instead of just 'activate'
 const CondaRequiredMajor = 4
@@ -61,13 +61,13 @@ export class CondaActivationCommandProvider implements ITerminalActivationComman
       // New version.
       const interpreterPath = await this.condaService.getCondaFileFromInterpreter(pythonPath, envInfo.name)
       if (interpreterPath) {
-        const activatePath = path.join(path.dirname(interpreterPath), 'activate').fileToCommandArgument()
+        const activatePath = fileToCommandArgument(path.join(path.dirname(interpreterPath), 'activate'))
         const firstActivate = this.platform.isWindows ?
           activatePath :
           `source ${activatePath}`
         return [
           firstActivate,
-          `conda activate ${envInfo.name.toCommandArgument()}`
+          `conda activate ${toCommandArgument(envInfo.name)}`
         ]
       }
     }
@@ -117,7 +117,7 @@ export class CondaActivationCommandProvider implements ITerminalActivationComman
       const condaScriptsPath: string = path.dirname(condaExePath)
       // prefix the cmd with the found path, and ensure it's quoted properly
       activateCmd = path.join(condaScriptsPath, activateCmd)
-      activateCmd = activateCmd.toCommandArgument()
+      activateCmd = toCommandArgument(activateCmd)
     }
 
     return activateCmd
@@ -129,7 +129,7 @@ export class CondaActivationCommandProvider implements ITerminalActivationComman
 
     const activate = await this.getWindowsActivateCommand()
     return [
-      `${activate} ${envName.toCommandArgument()}`
+      `${activate} ${toCommandArgument(envName)}`
     ]
   }
 
@@ -146,7 +146,7 @@ export class CondaActivationCommandProvider implements ITerminalActivationComman
   ): Promise<string[] | undefined> {
     // https://github.com/conda/conda/blob/be8c08c083f4d5e05b06bd2689d2cd0d410c2ffe/shell/etc/fish/conf.d/conda.fish#L18-L28
     return [
-      `${conda.fileToCommandArgument()} activate ${envName.toCommandArgument()}`
+      `${fileToCommandArgument(conda)} activate ${toCommandArgument(envName)}`
     ]
   }
 
@@ -157,7 +157,7 @@ export class CondaActivationCommandProvider implements ITerminalActivationComman
     const condaDir = path.dirname(conda)
     const activateFile = path.join(condaDir, 'activate')
     return [
-      `source ${activateFile.fileToCommandArgument()} ${envName.toCommandArgument()}`
+      `source ${fileToCommandArgument(activateFile)} ${toCommandArgument(envName)}`
     ]
   }
 }

@@ -6,12 +6,12 @@
 import { inject, injectable } from 'inversify'
 import { ConfigurationTarget, workspace } from 'coc.nvim'
 import { IApplicationShell } from '../common/application/types'
-import '../common/extensions'
 import {
   IConfigurationService, IPersistentStateFactory,
   IPythonExtensionBanner
 } from '../common/types'
 import { getRandomBetween } from '../common/utils/random'
+import { emptyFn } from '../common/function'
 
 // persistent state names, exported to make use of in testing
 export enum ProposeLSStateKeys {
@@ -62,7 +62,7 @@ export class ProposeLanguageServerBanner implements IPythonExtensionBanner {
     // we only want 10% of folks that use Jedi to see this survey.
     const randomSample: number = getRandomBetween(0, 100)
     if (randomSample >= this.sampleSizePerHundred) {
-      this.disable().ignoreErrors()
+      this.disable().catch(emptyFn)
       return
     }
   }

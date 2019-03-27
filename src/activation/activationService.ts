@@ -10,10 +10,10 @@ import { LSNotSupportedDiagnosticServiceId } from '../application/diagnostics/ch
 import { IDiagnosticsService } from '../application/diagnostics/types'
 import { IWorkspaceService } from '../common/application/types'
 import { STANDARD_OUTPUT_CHANNEL } from '../common/constants'
-import '../common/extensions'
 import { IConfigurationService, IDisposableRegistry, IOutputChannel, IPythonSettings, Resource } from '../common/types'
 import { IServiceContainer } from '../ioc/types'
 import { IExtensionActivationService, ILanguageServerActivator, LanguageServerActivator } from './types'
+import { emptyFn } from '../common/function'
 
 const jediEnabledSetting: keyof IPythonSettings = 'jediEnabled'
 const workspacePathNameForGlobalWorkspaces = ''
@@ -49,7 +49,7 @@ export class LanguageServerExtensionActivationService implements IExtensionActiv
         return
       }
       const diagnostic = await this.lsNotSupportedDiagnosticService.diagnose(undefined)
-      this.lsNotSupportedDiagnosticService.handle(diagnostic).ignoreErrors()
+      this.lsNotSupportedDiagnosticService.handle(diagnostic).catch(emptyFn)
       if (diagnostic.length) {
         jedi = true
       }

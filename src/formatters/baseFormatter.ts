@@ -2,7 +2,6 @@ import fs from 'fs-extra'
 import path from 'path'
 import { IWorkspaceService } from '../common/application/types'
 import { STANDARD_OUTPUT_CHANNEL } from '../common/constants'
-import '../common/extensions'
 import { isNotInstalledError } from '../common/helpers'
 import { IPythonToolExecutionService } from '../common/process/types'
 import { IInstaller, IOutputChannel, Product, Resource } from '../common/types'
@@ -13,6 +12,7 @@ import { OutputChannel, workspace } from 'coc.nvim'
 import { TextDocument, FormattingOptions, Range, TextEdit } from 'vscode-languageserver-types'
 import { CancellationToken } from 'vscode-jsonrpc'
 import Uri from 'vscode-uri'
+import { emptyFn } from '../common/function'
 
 export abstract class BaseFormatter {
   protected readonly outputChannel: OutputChannel
@@ -74,7 +74,7 @@ export abstract class BaseFormatter {
         return [] as TextEdit[]
       })
       .then(edits => {
-        this.deleteTempFile(filepath, tempFile).ignoreErrors()
+        this.deleteTempFile(filepath, tempFile).catch(emptyFn)
         return edits
       })
     // tslint:disable-next-line: no-floating-promises
@@ -112,7 +112,7 @@ export abstract class BaseFormatter {
 
   private checkCancellation(originalFile: string, tempFile: string, token?: CancellationToken): boolean {
     if (token && token.isCancellationRequested) {
-      this.deleteTempFile(originalFile, tempFile).ignoreErrors()
+      this.deleteTempFile(originalFile, tempFile).catch(emptyFn)
       return true
     }
     return false

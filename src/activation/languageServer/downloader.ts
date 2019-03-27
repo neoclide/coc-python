@@ -8,7 +8,6 @@ import * as path from 'path'
 import { workspace } from 'coc.nvim'
 import { IApplicationShell } from '../../common/application/types'
 import { STANDARD_OUTPUT_CHANNEL } from '../../common/constants'
-import '../../common/extensions'
 import { IFileSystem } from '../../common/platform/types'
 import { IOutputChannel } from '../../common/types'
 import { createDeferred } from '../../common/utils/async'
@@ -18,6 +17,7 @@ import {
   IHttpClient, ILanguageServerDownloader, ILanguageServerFolderService,
   IPlatformData
 } from '../types'
+import { emptyFn } from '../../common/function'
 
 // tslint:disable:no-require-imports no-any
 
@@ -52,7 +52,7 @@ export class LanguageServerDownloader implements ILanguageServerDownloader {
       this.output.appendLine(LanguageService.downloadFailedOutputMessage())
       this.output.appendLine(err)
       success = false
-      this.showMessageAndOptionallyShowOutput(LanguageService.lsFailedToDownload()).ignoreErrors()
+      this.showMessageAndOptionallyShowOutput(LanguageService.lsFailedToDownload()).catch(emptyFn)
       throw new Error(err)
     }
 
@@ -63,7 +63,7 @@ export class LanguageServerDownloader implements ILanguageServerDownloader {
       this.output.appendLine(LanguageService.extractionFailedOutputMessage())
       this.output.appendLine(err)
       success = false
-      this.showMessageAndOptionallyShowOutput(LanguageService.lsFailedToExtract()).ignoreErrors()
+      this.showMessageAndOptionallyShowOutput(LanguageService.lsFailedToExtract()).catch(emptyFn)
       throw new Error(err)
     } finally {
       await this.fs.deleteFile(localTempFilePath)
@@ -166,7 +166,7 @@ export class LanguageServerDownloader implements ILanguageServerDownloader {
 
     // Set file to executable (nothing happens in Windows, as chmod has no definition there)
     const executablePath = path.join(destinationFolder, this.platformData.engineExecutableName)
-    await this.fs.chmod(executablePath, '0764') // -rwxrw-r--
+    await this.fs.chmod(executablePath, '0755') // -rwxrw-r--
 
     this.output.appendLine(LanguageService.extractionDoneOutputMessage())
   }

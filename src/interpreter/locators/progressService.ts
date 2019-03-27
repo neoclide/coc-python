@@ -11,6 +11,7 @@ import { createDeferredFrom, Deferred } from '../../common/utils/async'
 import { noop } from '../../common/utils/misc'
 import { IServiceContainer } from '../../ioc/types'
 import { IInterpreterLocatorProgressService, IInterpreterLocatorService, PythonInterpreter } from '../contracts'
+import { emptyFn } from '../../common/function'
 
 @injectable()
 export class InterpreterLocatorProgressService implements IInterpreterLocatorProgressService {
@@ -58,7 +59,7 @@ export class InterpreterLocatorProgressService implements IInterpreterLocatorPro
     Promise.all(this.deferreds.map(item => item.promise))
       .catch(noop)
       .then(() => this.checkProgress())
-      .ignoreErrors()
+      .catch(emptyFn)
   }
   @traceDecorators.verbose('Checking whether locactors have completed locating')
   private areAllItemsComplete() {

@@ -7,12 +7,12 @@ import { inject, injectable } from 'inversify'
 import * as path from 'path'
 import { Disposable, Uri, workspace } from 'coc.nvim'
 import { ICommandManager, IDocumentManager, IWorkspaceService } from '../../common/application/types'
-import '../../common/extensions'
 import { IFileSystem, IPlatformService } from '../../common/platform/types'
 import { ITerminalServiceFactory } from '../../common/terminal/types'
 import { IConfigurationService, IDisposableRegistry } from '../../common/types'
 import { DjangoContextInitializer } from './djangoContext'
 import { TerminalCodeExecutionProvider } from './terminalCodeExecution'
+import { fileToCommandArgument } from '../../common/string'
 
 @injectable()
 export class DjangoShellCodeExecutionProvider extends TerminalCodeExecutionProvider {
@@ -37,7 +37,7 @@ export class DjangoShellCodeExecutionProvider extends TerminalCodeExecutionProvi
     const workspaceRoot = workspace.rootPath
     const managePyPath = workspaceRoot.length === 0 ? 'manage.py' : path.join(workspaceRoot, 'manage.py')
 
-    args.push(managePyPath.fileToCommandArgument())
+    args.push(fileToCommandArgument(managePyPath))
     args.push('shell')
     return { command, args }
   }

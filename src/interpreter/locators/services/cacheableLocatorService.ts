@@ -7,12 +7,12 @@ import { injectable, unmanaged } from 'inversify'
 import md5 from 'md5'
 import { Disposable, Event, Emitter, Uri } from 'coc.nvim'
 import { IWorkspaceService } from '../../../common/application/types'
-import '../../../common/extensions'
 import { Logger, traceVerbose } from '../../../common/logger'
 import { IDisposableRegistry, IPersistentStateFactory } from '../../../common/types'
 import { createDeferred, Deferred } from '../../../common/utils/async'
 import { IServiceContainer } from '../../../ioc/types'
 import { IInterpreterLocatorService, IInterpreterWatcher, PythonInterpreter } from '../../contracts'
+import { emptyFn } from '../../../common/function'
 
 @injectable()
 export abstract class CacheableLocatorService implements IInterpreterLocatorService {
@@ -43,7 +43,7 @@ export abstract class CacheableLocatorService implements IInterpreterLocatorServ
       this.promisesPerResource.set(cacheKey, deferred)
 
       this.addHandlersForInterpreterWatchers(cacheKey, resource)
-        .ignoreErrors()
+        .catch(emptyFn)
 
       const promise = this.getInterpretersImplementation(resource)
         .then(async items => {
@@ -77,7 +77,7 @@ export abstract class CacheableLocatorService implements IInterpreterLocatorServ
       watcher.onDidCreate(() => {
         Logger.verbose(`Interpreter Watcher change handler for ${this.cacheKeyPrefix}`)
         this.promisesPerResource.delete(cacheKey)
-        this.getInterpreters(resource).ignoreErrors()
+        this.getInterpreters(resource).catch(emptyFn)
       }, this, disposableRegisry)
     })
   }

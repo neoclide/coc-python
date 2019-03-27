@@ -7,11 +7,11 @@ import { inject, injectable } from 'inversify'
 import * as path from 'path'
 import { Disposable, Uri } from 'coc.nvim'
 import { IWorkspaceService } from '../../common/application/types'
-import '../../common/extensions'
 import { IPlatformService } from '../../common/platform/types'
 import { ITerminalService, ITerminalServiceFactory } from '../../common/terminal/types'
 import { IConfigurationService, IDisposableRegistry } from '../../common/types'
 import { ICodeExecutionService } from '../../terminals/types'
+import { fileToCommandArgument } from '../../common/string'
 
 @injectable()
 export class TerminalCodeExecutionProvider implements ICodeExecutionService {
@@ -32,8 +32,7 @@ export class TerminalCodeExecutionProvider implements ICodeExecutionService {
 
     const command = this.platformService.isWindows ? pythonSettings.pythonPath.replace(/\\/g, '/') : pythonSettings.pythonPath
     const launchArgs = pythonSettings.terminal.launchArgs
-
-    await this.getTerminalService(file).sendCommand(command, launchArgs.concat(file.fsPath.fileToCommandArgument()))
+    await this.getTerminalService(file).sendCommand(command, launchArgs.concat(fileToCommandArgument(file.fsPath)))
   }
 
   public async execute(code: string, resource?: Uri): Promise<void> {
@@ -80,6 +79,6 @@ export class TerminalCodeExecutionProvider implements ICodeExecutionService {
       return
     }
     const fileDirPath = path.dirname(file.fsPath)
-    await this.getTerminalService(file).sendText(`cd ${fileDirPath.fileToCommandArgument()}`)
+    await this.getTerminalService(file).sendText(`cd ${fileToCommandArgument(fileDirPath)}`)
   }
 }

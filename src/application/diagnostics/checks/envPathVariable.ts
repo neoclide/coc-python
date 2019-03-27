@@ -6,7 +6,6 @@
 import { inject, injectable } from 'inversify'
 import { DiagnosticSeverity } from 'vscode-languageserver-protocol'
 import { IApplicationEnvironment } from '../../../common/application/types'
-import '../../../common/extensions'
 import { IPlatformService } from '../../../common/platform/types'
 import { ICurrentProcess, IPathUtils, Resource } from '../../../common/types'
 import { IServiceContainer } from '../../../ioc/types'
@@ -15,6 +14,7 @@ import { IDiagnosticsCommandFactory } from '../commands/types'
 import { DiagnosticCodes } from '../constants'
 import { DiagnosticCommandPromptHandlerServiceId, MessageCommandPrompt } from '../promptHandler'
 import { DiagnosticScope, IDiagnostic, IDiagnosticHandlerService } from '../types'
+import { format } from '../../../common/string'
 
 const InvalidEnvPathVariableMessage =
   'The environment variable \'{0}\' seems to have some paths containing the \'"\' character.' +
@@ -49,7 +49,7 @@ export class EnvironmentPathVariableDiagnosticsService extends BaseDiagnosticsSe
   public async diagnose(resource: Resource): Promise<IDiagnostic[]> {
     if (this.platform.isWindows && this.doesPathVariableHaveInvalidEntries()) {
       const env = this.serviceContainer.get<IApplicationEnvironment>(IApplicationEnvironment)
-      const message = InvalidEnvPathVariableMessage.format(this.platform.pathVariableName, env.extensionName)
+      const message = format(InvalidEnvPathVariableMessage, this.platform.pathVariableName, env.extensionName)
       return [new InvalidEnvironmentPathVariableDiagnostic(message, resource)]
     } else {
       return []

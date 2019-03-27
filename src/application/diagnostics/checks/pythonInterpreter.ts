@@ -5,7 +5,6 @@
 
 import { inject, injectable } from 'inversify'
 import { DiagnosticSeverity } from 'vscode-languageserver-protocol'
-import '../../../common/extensions'
 import { IConfigurationService, Resource } from '../../../common/types'
 import { IInterpreterService } from '../../../interpreter/contracts'
 import { IServiceContainer } from '../../../ioc/types'

@@ -10,6 +10,7 @@ import { IDiagnosticsService } from '../../../application/diagnostics/types'
 import { IPlatformService } from '../../platform/types'
 import { Resource } from '../../types'
 import { ITerminalActivationHandler, ITerminalHelper, TerminalShellType } from '../types'
+import { emptyFn } from '../../function'
 
 @injectable()
 export class PowershellTerminalActivationFailedHandler implements ITerminalActivationHandler {
@@ -30,7 +31,7 @@ export class PowershellTerminalActivationFailedHandler implements ITerminalActiv
     if (!activationCommands || !Array.isArray(activationCommands) || activationCommands.length === 0) {
       return
     }
-    this.diagnosticService.handle([new PowershellActivationNotAvailableDiagnostic(resource)]).ignoreErrors()
+    this.diagnosticService.handle([new PowershellActivationNotAvailableDiagnostic(resource)]).catch(emptyFn)
   }
 
 }

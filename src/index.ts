@@ -5,17 +5,9 @@
 // tslint:disable:no-any
 require('reflect-metadata')
 // Initialize source maps (this must never be moved up nor further down).
-import { initialize } from './sourceMapSupport'
-initialize()
-require('./common/extensions')
-const durations: Record<string, number> = {}
-import { StopWatch } from './common/utils/stopWatch'
-// Do not move this line of code (used to measure extension load times).
-const stopWatch = new StopWatch()
+import { Disposable, ExtensionContext, languages, Memento, OutputChannel, Uri, workspace } from 'coc.nvim'
 import { Container } from 'inversify'
-import { languages, extensions, Memento, Uri, ExtensionContext, workspace, OutputChannel, Disposable } from 'coc.nvim'
 import { CodeActionKind } from 'vscode-languageserver-protocol'
-
 import { registerTypes as activationRegisterTypes } from './activation/serviceRegistry'
 import { IExtensionActivationManager, ILanguageServerExtension } from './activation/types'
 import { buildApi, IExtensionApi } from './api'
@@ -30,29 +22,19 @@ import { registerTypes as processRegisterTypes } from './common/process/serviceR
 import { registerTypes as commonRegisterTypes } from './common/serviceRegistry'
 // import { ITerminalHelper } from './common/terminal/types'
 import {
-  GLOBAL_MEMENTO,
-  IAsyncDisposableRegistry,
-  IConfigurationService,
-  IDisposableRegistry,
-  IExtensionContext,
-  IFeatureDeprecationManager,
-  IMemento,
-  IOutputChannel,
+  GLOBAL_MEMENTO, IAsyncDisposableRegistry, IConfigurationService, IDisposableRegistry, IExtensionContext, IFeatureDeprecationManager, IMemento, IOutputChannel,
   // Resource,
   WORKSPACE_MEMENTO
 } from './common/types'
 import { createDeferred } from './common/utils/async'
+import { StopWatch } from './common/utils/stopWatch'
 // import { Common } from './common/utils/localize'
 import { registerTypes as variableRegisterTypes } from './common/variables/serviceRegistry'
 import { registerTypes as formattersRegisterTypes } from './formatters/serviceRegistry'
-import { AutoSelectionRule, IInterpreterAutoSelectionRule, IInterpreterAutoSelectionService } from './interpreter/autoSelection/types'
 import { IInterpreterSelector } from './interpreter/configuration/types'
 import {
   // ICondaService,
-  IInterpreterLocatorProgressService,
-  IInterpreterService,
-  InterpreterLocatorProgressHandler,
-  // PythonInterpreter
+  IInterpreterLocatorProgressService, IInterpreterService, InterpreterLocatorProgressHandler
 } from './interpreter/contracts'
 import { registerTypes as interpretersRegisterTypes } from './interpreter/serviceRegistry'
 import { ServiceContainer } from './ioc/container'
@@ -70,8 +52,14 @@ import { activateSimplePythonRefactorProvider } from './providers/simpleRefactor
 import { TerminalProvider } from './providers/terminalProvider'
 import { ISortImportsEditingProvider } from './providers/types'
 import { activateUpdateSparkLibraryProvider } from './providers/updateSparkLibraryProvider'
+import { initialize } from './sourceMapSupport'
 import { registerTypes as commonRegisterTerminalTypes } from './terminals/serviceRegistry'
 import { ICodeExecutionManager, ITerminalAutoActivation } from './terminals/types'
+initialize()
+const durations: Record<string, number> = {}
+// Do not move this line of code (used to measure extension load times).
+const stopWatch = new StopWatch()
+
 // import { TEST_OUTPUT_CHANNEL } from './unittests/common/constants'
 // import { ITestContextService } from './unittests/common/types'
 // import { ITestCodeNavigatorCommandHandler, ITestExplorerCommandHandler } from './unittests/navigation/types'
@@ -125,7 +113,7 @@ async function activateUnsafe(context: ExtensionContext): Promise<IExtensionApi>
 
   // tslint:disable-next-line:no-suspicious-comment
   // TODO: Move this down to right before durations.endActivateTime is set.
-  // sendStartupTelemetry(Promise.all([activationDeferred.promise, activationPromise]), serviceContainer).ignoreErrors()
+  // sendStartupTelemetry(Promise.all([activationDeferred.promise, activationPromise]), serviceContainer).catch(emptyFn)
 
   const workspaceService = serviceContainer.get<IWorkspaceService>(IWorkspaceService)
   const interpreterManager = serviceContainer.get<IInterpreterService>(IInterpreterService)
@@ -135,7 +123,7 @@ async function activateUnsafe(context: ExtensionContext): Promise<IExtensionApi>
 
   // const jupyterExtension = extensions.getExtension('donjayamanne.jupyter')
   // const lintingEngine = serviceManager.get<ILintingEngine>(ILintingEngine)
-  // lintingEngine.linkJupyterExtension(jupyterExtension).ignoreErrors()
+  // lintingEngine.linkJupyterExtension(jupyterExtension).catch(emptyFn)
 
   context.subscriptions.push(new LinterCommands(serviceManager))
   const linterProvider = new LinterProvider(context, serviceManager)

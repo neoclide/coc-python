@@ -1,12 +1,12 @@
 // tslint:disable:no-any no-require-imports no-function-expression no-invalid-this
 
-import '../../common/extensions'
 import { isTestExecution } from '../constants'
 import { traceError, traceVerbose } from '../logger'
 import { Resource } from '../types'
 import { InMemoryInterpreterSpecificCache } from './cacheUtils'
 import { workspace } from 'coc.nvim'
 import Uri from 'vscode-uri'
+import { emptyFn } from '../function'
 
 // tslint:disable-next-line:no-require-imports no-var-requires
 const _debounce = require('lodash/debounce') as typeof import('lodash/debounce')
@@ -46,7 +46,7 @@ export function cacheResourceSpecificInterpreterData(key: string, expiryDuration
         return Promise.resolve(cache.data)
       }
       const promise = originalMethod.apply(this, args) as Promise<any>
-      promise.then(result => cache.data = result).ignoreErrors()
+      promise.then(result => cache.data = result).catch(emptyFn)
       return promise
     }
   }

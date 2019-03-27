@@ -15,6 +15,7 @@ import { IInterpreterAutoSelectionService } from '../interpreter/autoSelection/t
 import { IInterpreterService } from '../interpreter/contracts'
 import { IExtensionActivationManager, IExtensionActivationService } from './types'
 import Uri from 'vscode-uri'
+import { emptyFn } from '../common/function'
 
 @injectable()
 export class ExtensionActivationManager implements IExtensionActivationManager {
@@ -53,7 +54,7 @@ export class ExtensionActivationManager implements IExtensionActivationManager {
     }
     this.activatedWorkspaces.add(key)
     // Get latest interpreter list in the background.
-    this.interpreterService.getInterpreters(resource).ignoreErrors()
+    this.interpreterService.getInterpreters(resource).catch(() => { })
 
     await this.autoSelection.autoSelectInterpreter(resource)
     await Promise.all(this.activationServices.map(item => item.activate(resource)))
@@ -90,7 +91,7 @@ export class ExtensionActivationManager implements IExtensionActivationManager {
       return
     }
     const folder = workspace.workspaceFolder
-    this.activateWorkspace(folder ? Uri.parse(folder.uri) : undefined).ignoreErrors()
+    this.activateWorkspace(folder ? Uri.parse(folder.uri) : undefined).catch(emptyFn)
   }
   protected getWorkspaceKey(resource: Resource) {
     return workspace.rootPath

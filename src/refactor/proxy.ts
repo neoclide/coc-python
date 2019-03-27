@@ -4,13 +4,13 @@ import { ChildProcess } from 'child_process'
 import * as path from 'path'
 import { Disposable, workspace, Uri } from 'coc.nvim'
 import { Position, Range, TextDocument } from 'vscode-languageserver-protocol'
-import '../common/extensions'
 import { IS_WINDOWS } from '../common/platform/constants'
 import { IPythonExecutionFactory } from '../common/process/types'
 import { IPythonSettings } from '../common/types'
 import { createDeferred, Deferred } from '../common/utils/async'
 import { getWindowsLineEndingCount } from '../common/utils/text'
 import { IServiceContainer } from '../ioc/types'
+import { splitLines } from '../common/string'
 
 export class RefactorProxy implements Disposable {
   private _process?: ChildProcess
@@ -130,12 +130,13 @@ export class RefactorProxy implements Disposable {
       errorResponse = dataStr.split(/\r?\n/g).filter(line => line.length > 0).map(resp => JSON.parse(resp))
       this._previousStdErrData = ''
     } catch (ex) {
+      // tslint:disable-next-line: no-console
       console.error(ex)
       // Possible we've only received part of the data, hence don't clear previousData
       return
     }
     if (typeof errorResponse[0].message !== 'string' || errorResponse[0].message.length === 0) {
-      errorResponse[0].message = errorResponse[0].traceback.splitLines().pop()!
+      errorResponse[0].message = splitLines(errorResponse[0].traceback).pop()!
     }
     let errorMessage = errorResponse[0].message + '\n' + errorResponse[0].traceback
 

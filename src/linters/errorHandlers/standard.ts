@@ -3,6 +3,7 @@ import { ExecutionInfo, Product } from '../../common/types'
 import { IServiceContainer } from '../../ioc/types'
 import { ILinterManager, LinterId } from '../types'
 import { BaseErrorHandler } from './baseErrorHandler'
+import { emptyFn } from '../../common/function'
 
 export class StandardErrorHandler extends BaseErrorHandler {
   constructor(product: Product, outputChannel: OutputChannel, serviceContainer: IServiceContainer) {
@@ -21,7 +22,7 @@ export class StandardErrorHandler extends BaseErrorHandler {
     this.outputChannel.appendLine(error.toString())
 
     this.displayLinterError(info.id)
-      .ignoreErrors()
+      .catch(emptyFn)
     return true
   }
   private async displayLinterError(linterId: LinterId) {

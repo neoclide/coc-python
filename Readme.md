@@ -23,6 +23,7 @@ In your vim/neovim, run command:
 
 ## Optional steps
 
+- Language server would be downloaded when not found, make sure you have coc statusline integrated, checkout `:h coc-status`
 - [Install a linter](https://code.visualstudio.com/docs/python/linting) to get errors and warnings -- you can further customize linting rules to fit your needs.
 - Select your preferred Python interpreter/version/environment using the `Select Interpreter` command.
   - By default we use the one that's on your path.

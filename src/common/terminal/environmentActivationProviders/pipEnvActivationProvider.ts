@@ -5,12 +5,12 @@
 
 import { inject, injectable } from 'inversify'
 import Uri from 'vscode-uri'
-import '../../../common/extensions'
 import { IInterpreterService, InterpreterType, IPipEnvService } from '../../../interpreter/contracts'
 import { IWorkspaceService } from '../../application/types'
 import { IFileSystem } from '../../platform/types'
 import { ITerminalActivationCommandProvider, TerminalShellType } from '../types'
 import { workspace } from 'coc.nvim'
+import { fileToCommandArgument } from '../../string'
 
 @injectable()
 export class PipEnvActivationCommandProvider implements ITerminalActivationCommandProvider {
@@ -35,7 +35,7 @@ export class PipEnvActivationCommandProvider implements ITerminalActivationComma
       return
     }
     const execName = this.pipenvService.executable
-    return [`${execName.fileToCommandArgument()} shell`]
+    return [`${fileToCommandArgument(execName)} shell`]
   }
 
   public async getActivationCommandsForInterpreter(pythonPath: string, _targetShell: TerminalShellType): Promise<string[] | undefined> {
@@ -45,7 +45,7 @@ export class PipEnvActivationCommandProvider implements ITerminalActivationComma
     }
 
     const execName = this.pipenvService.executable
-    return [`${execName.fileToCommandArgument()} shell`]
+    return [`${fileToCommandArgument(execName)} shell`]
   }
 
 }

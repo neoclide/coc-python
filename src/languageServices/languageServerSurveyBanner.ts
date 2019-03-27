@@ -6,9 +6,9 @@
 import { inject, injectable } from 'inversify'
 import { FolderVersionPair, ILanguageServerFolderService } from '../activation/types'
 import { IApplicationShell } from '../common/application/types'
-import '../common/extensions'
 import { IBrowserService, IPersistentStateFactory, IPythonExtensionBanner } from '../common/types'
 import { getRandomBetween } from '../common/utils/random'
+import { emptyFn } from '../common/function'
 
 // persistent state names, exported to make use of in testing
 export enum LSSurveyStateKeys {
@@ -54,7 +54,7 @@ export class LanguageServerSurveyBanner implements IPythonExtensionBanner {
     this.isInitialized = true
 
     if (this.minCompletionsBeforeShow >= this.maxCompletionsBeforeShow) {
-      this.disable().ignoreErrors()
+      this.disable().catch(emptyFn)
     }
   }
 

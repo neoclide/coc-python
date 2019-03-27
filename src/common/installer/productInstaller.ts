@@ -4,7 +4,6 @@ import { OutputChannel, workspace } from 'coc.nvim'
 import { inject, injectable, named } from 'inversify'
 import * as os from 'os'
 import Uri from 'vscode-uri'
-import '../../common/extensions'
 import { IServiceContainer } from '../../ioc/types'
 import { IApplicationShell, ICommandManager } from '../application/types'
 import { Commands, STANDARD_OUTPUT_CHANNEL } from '../constants'
@@ -42,8 +41,9 @@ export abstract class BaseInstaller {
     }
     const promise = this.promptToInstallImplementation(product, resource)
     BaseInstaller.PromptPromises.set(key, promise)
-    promise.then(() => BaseInstaller.PromptPromises.delete(key)).ignoreErrors()
-    promise.catch(() => BaseInstaller.PromptPromises.delete(key)).ignoreErrors()
+    // tslint:disable-next-line: no-empty
+    promise.then(() => BaseInstaller.PromptPromises.delete(key)).catch(() => { })
+    promise.catch(() => BaseInstaller.PromptPromises.delete(key))
 
     return promise
   }

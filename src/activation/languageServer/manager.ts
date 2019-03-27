@@ -4,12 +4,12 @@
 'use strict'
 
 import { inject, injectable } from 'inversify'
-import '../../common/extensions'
 import { traceDecorators } from '../../common/logger'
 import { IDisposable, Resource } from '../../common/types'
 import { debounce } from '../../common/utils/decorators'
 import { IServiceContainer } from '../../ioc/types'
 import { ILanguageServer, ILanguageServerAnalysisOptions, ILanguageServerExtension, ILanguageServerManager } from '../types'
+import { emptyFn } from '../../common/function'
 
 @injectable()
 export class LanguageServerManager implements ILanguageServerManager {
@@ -49,7 +49,7 @@ export class LanguageServerManager implements ILanguageServerManager {
   }
   @debounce(1000)
   protected restartLanguageServerDebounced(): void {
-    this.restartLanguageServer().ignoreErrors()
+    this.restartLanguageServer().catch(emptyFn)
   }
   @traceDecorators.error('Failed to restart Language Server')
   @traceDecorators.verbose('Restarting Language Server')

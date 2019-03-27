@@ -5,7 +5,6 @@ import { Terminal } from 'coc.nvim'
 import { inject, injectable } from 'inversify'
 import { Disposable, Emitter, Event } from 'vscode-languageserver-protocol'
 import Uri from 'vscode-uri'
-import '../../common/extensions'
 import { IServiceContainer } from '../../ioc/types'
 import { ITerminalManager } from '../application/types'
 import { IDisposableRegistry } from '../types'
@@ -59,10 +58,10 @@ export class TerminalService implements ITerminalService, Disposable {
     }
     const shellPath = this.terminalHelper.getTerminalShellPath()
     this.terminalShellType = !shellPath || shellPath.length === 0 ? TerminalShellType.other : this.terminalHelper.identifyTerminalShell(shellPath)
-    this.terminal = await this.terminalManager.createTerminal({ name: this.title })
+    this.terminal = await this.terminalManager.createTerminal({ name: this.title, shellPath, shellArgs: [] })
     await this.terminalActivator.activateEnvironmentInTerminal(this.terminal!, this.resource, preserveFocus)
     this.terminal!.show(preserveFocus)
-    // this.sendTelemetry().ignoreErrors()
+    // this.sendTelemetry().catch(emptyFn)
   }
   private terminalCloseHandler(terminal: Terminal): void {
     if (terminal === this.terminal) {

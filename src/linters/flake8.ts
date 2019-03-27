@@ -1,6 +1,5 @@
 import { CancellationToken, TextDocument } from 'vscode-languageserver-protocol'
 import { OutputChannel, Uri } from 'coc.nvim'
-import '../common/extensions'
 import { Product } from '../common/types'
 import { IServiceContainer } from '../ioc/types'
 import { BaseLinter } from './baseLinter'

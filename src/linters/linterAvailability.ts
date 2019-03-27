@@ -6,7 +6,6 @@
 import { Uri } from 'coc.nvim'
 import { inject, injectable } from 'inversify'
 import { IApplicationShell, IWorkspaceService } from '../common/application/types'
-import '../common/extensions'
 import { traceError } from '../common/logger'
 import { IConfigurationService, IInstaller, Product } from '../common/types'
 import { IAvailableLinterActivator, ILinterInfo } from './types'

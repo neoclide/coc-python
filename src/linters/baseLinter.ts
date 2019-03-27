@@ -6,12 +6,13 @@ import { OutputChannel, Uri, workspace } from 'coc.nvim'
 import { CancellationToken, TextDocument } from 'vscode-languageserver-protocol'
 import { IWorkspaceService } from '../common/application/types'
 import { isTestExecution } from '../common/constants'
-import '../common/extensions'
 import { IPythonToolExecutionService } from '../common/process/types'
 import { ExecutionInfo, IConfigurationService, ILogger, IPythonSettings, Product } from '../common/types'
 import { IServiceContainer } from '../ioc/types'
 import { ErrorHandler } from './errorHandlers/errorHandler'
 import { ILinter, ILinterInfo, ILinterManager, ILintMessage, LinterId, LintMessageSeverity } from './types'
+import { splitLines } from '../common/string'
+import { emptyFn } from '../common/function'
 
 // tslint:disable-next-line:no-require-imports no-var-requires no-any
 const namedRegexp = require('named-js-regexp')
@@ -143,18 +144,18 @@ export abstract class BaseLinter implements ILinter {
   }
 
   protected async parseMessages(output: string, _document: TextDocument, _token: CancellationToken, regEx: string) {
-    const outputLines = output.splitLines({ removeEmptyEntries: false, trim: false })
+    const outputLines = splitLines(output, { removeEmptyEntries: false, trim: false })
     return this.parseLines(outputLines, regEx)
   }
 
   protected async handleError(error: Error, resource: Uri, execInfo: ExecutionInfo) {
     if (isTestExecution()) {
       this.errorHandler.handleError(error, resource, execInfo)
-        .ignoreErrors()
+        .catch(emptyFn)
     } else {
       this.errorHandler.handleError(error, resource, execInfo)
         .catch(this.logger.logError.bind(this, 'Error in errorHandler.handleError'))
-        .ignoreErrors()
+        .catch(emptyFn)
     }
   }
 

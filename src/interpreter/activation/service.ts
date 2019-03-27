@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 'use strict'
-import '../../common/extensions'
 
 import { inject, injectable } from 'inversify'
 import path from 'path'
@@ -20,6 +19,7 @@ import { IEnvironmentVariablesProvider } from '../../common/variables/types'
 import { EXTENSION_ROOT_DIR } from '../../constants'
 import { PythonInterpreter } from '../contracts'
 import { IEnvironmentActivationService } from './types'
+import { fileToCommandArgument } from '../../common/string'
 
 const getEnvironmentPrefix = 'e8b39361-0157-4923-80e1-22d70d46dee6'
 const cacheDuration = 10 * 60 * 1000
@@ -74,7 +74,7 @@ export class EnvironmentActivationService implements IEnvironmentActivationServi
       // In order to make sure we know where the environment output is,
       // put in a dummy echo we can look for
       const printEnvPyFile = path.join(EXTENSION_ROOT_DIR, 'pythonFiles', 'printEnvVariables.py')
-      const command = `${activationCommand} && echo '${getEnvironmentPrefix}' && python ${printEnvPyFile.fileToCommandArgument()}`
+      const command = `${activationCommand} && echo '${getEnvironmentPrefix}' && python ${fileToCommandArgument(printEnvPyFile)}`
       traceVerbose(`Activating Environment to capture Environment variables, ${command}`)
 
       // Conda activate can hang on certain systems. Fail after 30 seconds.
@@ -95,7 +95,7 @@ export class EnvironmentActivationService implements IEnvironmentActivationServi
       }
     }
   }
-  protected onDidEnvironmentVariablesChange(affectedResource: Resource) {
+  protected onDidEnvironmentVariablesChange(affectedResource: Resource): void {
     clearCachedResourceSpecificIngterpreterData('ActivatedEnvironmentVariables', affectedResource)
   }
   protected fixActivationCommands(commands: string[]): string[] {

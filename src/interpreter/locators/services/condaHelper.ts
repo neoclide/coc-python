@@ -2,9 +2,9 @@
 // Licensed under the MIT License.
 
 import path from 'path'
-import '../../../common/extensions'
 import { CondaInfo } from '../../contracts'
 import { AnacondaDisplayName, AnacondaIdentfiers } from './conda'
+import { splitLines } from '../../../common/string'
 
 export type EnvironmentPath = string
 export type EnvironmentName = string
@@ -57,7 +57,7 @@ export class CondaHelper {
    * @memberof CondaHelper
    */
   public parseCondaEnvironmentNames(condaEnvironmentList: string): { name: string; path: string }[] | undefined {
-    const environments = condaEnvironmentList.splitLines({ trim: false })
+    const environments = splitLines(condaEnvironmentList, { trim: false, removeEmptyEntries: false })
     const baseEnvironmentLine = environments.filter(line => line.indexOf('*') > 0)
     if (baseEnvironmentLine.length === 0) {
       return
@@ -85,7 +85,7 @@ export class CondaHelper {
   /**
    * Does the given string match a known Anaconda identifier.
    */
-  private isIdentifiableAsAnaconda(value: string) {
+  private isIdentifiableAsAnaconda(value: string): boolean {
     const valueToSearch = value.toLowerCase()
     return AnacondaIdentfiers.some(item => valueToSearch.indexOf(item.toLowerCase()) !== -1)
   }

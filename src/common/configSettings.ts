@@ -4,7 +4,6 @@ import * as child_process from 'child_process'
 import path from 'path'
 import { DiagnosticSeverity, Disposable, Event, Emitter } from 'vscode-languageserver-protocol'
 import { ConfigurationChangeEvent, ConfigurationTarget, WorkspaceConfiguration } from 'coc.nvim'
-import '../common/extensions'
 import { IInterpreterAutoSeletionProxyService } from '../interpreter/autoSelection/types'
 import { IWorkspaceService } from './application/types'
 import { WorkspaceService } from './application/workspace'
@@ -25,6 +24,7 @@ import {
 } from './types'
 import { debounce } from './utils/decorators'
 import { SystemVariables } from './variables/systemVariables'
+import { emptyFn } from './function'
 
 // tslint:disable:no-require-imports no-var-requires
 const untildify = require('untildify')
@@ -128,7 +128,7 @@ export class PythonSettings implements IPythonSettings {
     if (this.pythonPath.length === 0 || this.pythonPath === 'python') {
       const autoSelectedPythonInterpreter = this.interpreterAutoSelectionService.getAutoSelectedInterpreter(this.workspaceRoot)
       if (autoSelectedPythonInterpreter) {
-        this.interpreterAutoSelectionService.setWorkspaceInterpreter(this.workspaceRoot, autoSelectedPythonInterpreter).ignoreErrors()
+        this.interpreterAutoSelectionService.setWorkspaceInterpreter(this.workspaceRoot, autoSelectedPythonInterpreter).catch(emptyFn)
       }
       this.pythonPath = autoSelectedPythonInterpreter ? autoSelectedPythonInterpreter.path : this.pythonPath
     }

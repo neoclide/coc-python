@@ -8,12 +8,12 @@ import path from 'path'
 import { Disposable, TextDocument } from 'vscode-languageserver-protocol'
 import { IDocumentManager, IWorkspaceService } from '../common/application/types'
 import { isTestExecution } from '../common/constants'
-import '../common/extensions'
 import { IFileSystem } from '../common/platform/types'
 import { IConfigurationService } from '../common/types'
 import { IInterpreterService } from '../interpreter/contracts'
 import { IServiceContainer } from '../ioc/types'
 import { ILinterManager, ILintingEngine } from '../linters/types'
+import { emptyFn } from '../common/function'
 
 export class LinterProvider implements Disposable {
   private context: ExtensionContext
@@ -50,7 +50,7 @@ export class LinterProvider implements Disposable {
     // On workspace reopen we don't get `onDocumentOpened` since it is first opened
     // and then the extension is activated. So schedule linting pass now.
     if (!isTestExecution()) {
-      setTimeout(() => this.engine.lintOpenPythonFiles().ignoreErrors(), 1200)
+      setTimeout(() => this.engine.lintOpenPythonFiles().catch(emptyFn), 1200)
     }
   }
 
@@ -66,19 +66,19 @@ export class LinterProvider implements Disposable {
     // Look for python files that belong to the specified workspace folder.
     workspace.textDocuments.forEach(document => {
       if (e.affectsConfiguration('python.linting', document.uri)) {
-        this.engine.lintDocument(document).ignoreErrors()
+        this.engine.lintDocument(document).catch(emptyFn)
       }
     })
   }
 
   private onDocumentOpened(document: TextDocument): void {
-    this.engine.lintDocument(document).ignoreErrors()
+    this.engine.lintDocument(document).catch(emptyFn)
   }
 
   private onDocumentSaved(document: TextDocument): void {
     const settings = this.configuration.getSettings(Uri.parse(document.uri))
     if (document.languageId === 'python' && settings.linting.enabled && settings.linting.lintOnSave) {
-      this.engine.lintDocument(document).ignoreErrors()
+      this.engine.lintDocument(document).catch(emptyFn)
       return
     }
 
@@ -89,7 +89,7 @@ export class LinterProvider implements Disposable {
         if (watchers.length > 0) {
           setTimeout(() => this.engine.lintOpenPythonFiles(), 1000)
         }
-      }).ignoreErrors()
+      }).catch(emptyFn)
   }
 
   private onDocumentClosed(document: TextDocument) {

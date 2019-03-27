@@ -4,9 +4,9 @@
 import { inject, injectable } from 'inversify'
 import * as path from 'path'
 import { IServiceContainer } from '../../../ioc/types'
-import '../../extensions'
 import { TerminalShellType } from '../types'
 import { BaseActivationCommandProvider } from './baseActivationProvider'
+import { fileToCommandArgument } from '../../string'
 
 @injectable()
 export class CommandPromptAndPowerShell extends BaseActivationCommandProvider {
@@ -26,9 +26,9 @@ export class CommandPromptAndPowerShell extends BaseActivationCommandProvider {
     }
 
     if (targetShell === TerminalShellType.commandPrompt && scriptFile.endsWith('activate.bat')) {
-      return [scriptFile.fileToCommandArgument()]
+      return [fileToCommandArgument(scriptFile)]
     } else if ((targetShell === TerminalShellType.powershell || targetShell === TerminalShellType.powershellCore) && scriptFile.endsWith('activate.ps1')) {
-      return [`& ${scriptFile.fileToCommandArgument()}`]
+      return [`& ${fileToCommandArgument(scriptFile)}`]
     } else if (targetShell === TerminalShellType.commandPrompt && scriptFile.endsWith('activate.ps1')) {
       // lets not try to run the powershell file from command prompt (user may not have powershell)
       return []

@@ -5,7 +5,6 @@
 
 import { inject, injectable, unmanaged } from 'inversify'
 import { compare } from 'semver'
-import '../../../common/extensions'
 import { traceDecorators, traceVerbose } from '../../../common/logger'
 import { IFileSystem } from '../../../common/platform/types'
 import { IPersistentState, IPersistentStateFactory, Resource } from '../../../common/types'

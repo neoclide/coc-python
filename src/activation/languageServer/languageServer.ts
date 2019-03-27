@@ -6,13 +6,13 @@
 import { LanguageClient, LanguageClientOptions } from 'coc.nvim'
 import { inject, injectable, named } from 'inversify'
 import { Disposable } from 'vscode-languageserver-protocol'
-import '../../common/extensions'
 import { traceDecorators, traceError } from '../../common/logger'
 import { IConfigurationService, Resource } from '../../common/types'
 import { createDeferred, Deferred, sleep } from '../../common/utils/async'
 import { noop } from '../../common/utils/misc'
 import { ILanguageClientFactory, ILanguageServer, LanguageClientFactory } from '../types'
 import { ProgressReporting } from './progress'
+import { emptyFn } from '../../common/function'
 
 @injectable()
 export class LanguageServer implements ILanguageServer {
@@ -67,7 +67,7 @@ export class LanguageServer implements ILanguageServer {
           traceError('Request python/loadExtension failed', ex)
         )
       )
-      .ignoreErrors()
+      .catch(emptyFn)
   }
 
   protected async serverReady(): Promise<void> {

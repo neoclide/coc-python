@@ -8,7 +8,6 @@ import { inject, injectable, named } from 'inversify'
 import { DiagnosticSeverity } from 'vscode-languageserver-protocol'
 import Uri from 'vscode-uri'
 import { IDocumentManager } from '../../../common/application/types'
-import '../../../common/extensions'
 import { IConfigurationService, Resource } from '../../../common/types'
 import { Diagnostics } from '../../../common/utils/localize'
 import { SystemVariables } from '../../../common/variables/systemVariables'
@@ -80,11 +79,11 @@ export class InvalidPythonPathInDebuggerService extends BaseDiagnosticsService
     // if (pythonPathSource === pythonPathSource.launchJson) {
     //   this.handle([new InvalidPythonPathInDebuggerDiagnostic(DiagnosticCodes.InvalidPythonPathInDebuggerLaunchDiagnostic, resource)])
     //     .catch(ex => traceError('Failed to handle invalid python path in launch.json debugger', ex))
-    //     .ignoreErrors()
+    //     .catch(emptyFn)
     // } else {
     //   this.handle([new InvalidPythonPathInDebuggerDiagnostic(DiagnosticCodes.InvalidPythonPathInDebuggerSettingsDiagnostic, resource)])
     //     .catch(ex => traceError('Failed to handle invalid python path in settings.json debugger', ex))
-    //     .ignoreErrors()
+    //     .catch(emptyFn)
     // }
     return false
   }

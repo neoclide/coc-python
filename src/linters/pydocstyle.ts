@@ -1,7 +1,6 @@
 import * as path from 'path'
 import { CancellationToken, TextDocument } from 'vscode-languageserver-protocol'
 import { workspace, OutputChannel, Uri } from 'coc.nvim'
-import '../common/extensions'
 import { Product } from '../common/types'
 import { IServiceContainer } from '../ioc/types'
 import { IS_WINDOWS } from './../common/platform/constants'

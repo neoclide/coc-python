@@ -7,12 +7,12 @@ import { inject, injectable, named } from 'inversify'
 import { compare } from 'semver'
 import { Event, Emitter, Uri } from 'coc.nvim'
 import { IWorkspaceService } from '../../common/application/types'
-import '../../common/extensions'
 import { IFileSystem } from '../../common/platform/types'
 import { IPersistentState, IPersistentStateFactory, Resource } from '../../common/types'
 import { createDeferred, Deferred } from '../../common/utils/async'
 import { IInterpreterHelper, PythonInterpreter } from '../contracts'
 import { AutoSelectionRule, IInterpreterAutoSelectionRule, IInterpreterAutoSelectionService, IInterpreterAutoSeletionProxyService } from './types'
+import { emptyFn } from '../../common/function'
 
 const preferredGlobalInterpreter = 'preferredGlobalPyInterpreter'
 const workspacePathNameForGlobalWorkspaces = ''
@@ -72,7 +72,7 @@ export class InterpreterAutoSelectionService implements IInterpreterAutoSelectio
       await this.clearWorkspaceStoreIfInvalid(resource)
       await this.userDefinedInterpreter.autoSelectInterpreter(resource, this)
       this.didAutoSelectedInterpreterEmitter.fire()
-      Promise.all(this.rules.map(item => item.autoSelectInterpreter(resource))).ignoreErrors()
+      Promise.all(this.rules.map(item => item.autoSelectInterpreter(resource))).catch(emptyFn)
       deferred.resolve()
     }
     return this.autoSelectedWorkspacePromises.get(key)!.promise

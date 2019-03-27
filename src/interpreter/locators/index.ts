@@ -18,6 +18,7 @@ import {
   WINDOWS_REGISTRY_SERVICE,
   WORKSPACE_VIRTUAL_ENV_SERVICE
 } from '../contracts'
+import { emptyFn } from '../../common/function'
 // tslint:disable-next-line:no-require-imports no-var-requires
 const flatten = require('lodash/flatten') as typeof import('lodash/flatten')
 
@@ -76,7 +77,7 @@ export class PythonInterpreterLocatorService implements IInterpreterLocatorServi
         if (found) {
           this._hasInterpreters.resolve(true)
         }
-      }).ignoreErrors()
+      }).catch(emptyFn)
     })
     const listOfInterpreters = await Promise.all(promises)
 

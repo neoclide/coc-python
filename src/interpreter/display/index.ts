@@ -1,11 +1,11 @@
 import { Disposable, StatusBarItem, Uri } from 'coc.nvim'
 import { inject, injectable } from 'inversify'
 import { IApplicationShell, IWorkspaceService } from '../../common/application/types'
-import '../../common/extensions'
 import { IDisposableRegistry, Resource } from '../../common/types'
 import { IServiceContainer } from '../../ioc/types'
 import { IInterpreterAutoSelectionService } from '../autoSelection/types'
 import { IInterpreterDisplay, IInterpreterHelper, IInterpreterService, PythonInterpreter } from '../contracts'
+import { emptyFn } from '../../common/function'
 
 // tslint:disable-next-line:completed-docs
 @injectable()
@@ -47,7 +47,7 @@ export class InterpreterDisplay implements IInterpreterDisplay {
   }
   private onDidChangeInterpreterInformation(info: PythonInterpreter): void {
     if (!this.currentlySelectedInterpreterPath || this.currentlySelectedInterpreterPath === info.path) {
-      this.updateDisplay(this.currentlySelectedWorkspaceFolder).ignoreErrors()
+      this.updateDisplay(this.currentlySelectedWorkspaceFolder).catch(emptyFn)
     }
   }
   private async updateDisplay(workspaceFolder?: Uri): Promise<void> {
