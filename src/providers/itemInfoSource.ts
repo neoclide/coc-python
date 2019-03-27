@@ -13,7 +13,7 @@ export class LanguageItemInfo {
   constructor(
     public tooltip: MarkupContent,
     public detail: string,
-    public signature: MarkupContent) { }
+    public signature: string) { }
 }
 
 export interface IItemInfoSource {
@@ -118,9 +118,10 @@ export class ItemInfoSource implements IItemInfoSource {
         }
 
         const description = this.textConverter.toMarkdown(lines.join(EOL))
-        tooltip.value = tooltip.value + description
+        const invalid = description.indexOf('\n') == -1 && description.startsWith('\\')
+        if (!invalid) tooltip.value = tooltip.value + description
 
-        infos.push(new LanguageItemInfo(tooltip, item.description, { value: signature, kind: 'plaintext' }))
+        infos.push(new LanguageItemInfo(tooltip, item.description, signature))
         return
       }
 
@@ -130,7 +131,7 @@ export class ItemInfoSource implements IItemInfoSource {
         }
         const description = this.textConverter.toMarkdown(item.description)
         tooltip.value = tooltip.value + '\n' + description
-        infos.push(new LanguageItemInfo(tooltip, item.description, { value: signature, kind: 'plaintext' }))
+        infos.push(new LanguageItemInfo(tooltip, item.description, signature))
         return
       }
 
@@ -139,7 +140,7 @@ export class ItemInfoSource implements IItemInfoSource {
           ? `${currentWord}: ${item.text}`
           : item.text
         tooltip.value = tooltip.value + '\n' + (['```python', code, '```', ''].join(EOL))
-        infos.push(new LanguageItemInfo(tooltip, '', { value: '', kind: 'plaintext' }))
+        infos.push(new LanguageItemInfo(tooltip, '', ''))
       }
     })
     return infos
