@@ -158,9 +158,20 @@ Except from `test`, `debug` and `datascience` features of [vscode-python](https:
 - `python.workspaceSymbols.rebuildOnFileSave`:Whether to re-build the tags file on when changes made to python files are saved., default: `true`
 - `python.workspaceSymbols.rebuildOnStart`:Whether to re-build the tags file on start (defaults to true)., default: `true`
 - `python.workspaceSymbols.tagFilePath`:Fully qualified path to tag file (exuberant ctag file), used to provide workspace symbols., default: `"${workspaceFolder}/.vscode/tags"`
-  ~/vim-dev/coc-python (master|✔) \$ convertOptions
 
 ## F.A.Q
+
+**Q:** MPLS using too much memory and CPU.
+
+**A:** It's bug of MPLS, checkout https://github.com/Microsoft/python-language-server/issues/832.
+
+**Q:** MPLS doesn't work with unsaved buffer.
+
+**A:** Yes, it's not. You have to save your buffer to make it work.
+
+**Q:** Get unable to find document error from MPLS.
+
+**A:** Some filename would cause MPLS throw this error.
 
 ## License
 
