@@ -33,10 +33,10 @@ export class SourceMapSupport {
     return this.config.get<boolean>(setting, false)
   }
   public async disable(): Promise<void> {
-    if (this.enabled) {
-      this.config.update(setting, false, true)
-    }
-    await this.enableSourceMaps(false)
+    // if (this.enabled) {
+    //   this.config.update(setting, false, true)
+    // }
+    // await this.enableSourceMaps(false)
   }
   protected async enableSourceMaps(enable: boolean) {
     // const extensionSourceFile = path.join(EXTENSION_ROOT_DIR, 'lib', 'index.js')

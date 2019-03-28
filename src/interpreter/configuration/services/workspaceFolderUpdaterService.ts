@@ -13,7 +13,7 @@ export class WorkspaceFolderPythonPathUpdaterService implements IPythonPathUpdat
     if (pythonPathValue && pythonPathValue.workspaceValue === pythonPath) {
       return
     }
-    if (pythonPath.startsWith(this.workspaceFolder.fsPath)) {
+    if (pythonPath.toLowerCase().startsWith(this.workspaceFolder.fsPath.toLowerCase())) {
       pythonPath = path.relative(this.workspaceFolder.fsPath, pythonPath)
     }
     pythonConfig.update('pythonPath', pythonPath, false)

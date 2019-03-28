@@ -137,12 +137,6 @@
       "type": "object",
       "title": "Python",
       "properties": {
-        "python.diagnostics.sourceMapsEnabled": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enable source map support for meaningful strack traces in error logs.",
-          "scope": "application"
-        },
         "python.autoComplete.addBrackets": {
           "type": "boolean",
           "default": false,
