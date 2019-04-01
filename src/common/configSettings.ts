@@ -10,6 +10,7 @@ import { WorkspaceService } from './application/workspace'
 import { isTestExecution } from './constants'
 import { IS_WINDOWS } from './platform/constants'
 import Uri from 'vscode-uri'
+import which from 'which'
 import {
   IAnalysisSettings,
   IAutoCompleteSettings,
@@ -119,6 +120,7 @@ export class PythonSettings implements IPythonSettings {
   }
   // tslint:disable-next-line:cyclomatic-complexity max-func-body-length
   protected update(pythonSettings: WorkspaceConfiguration) {
+    let python = which.sync('python')
     const workspaceRoot = this.workspaceRoot.fsPath
     const systemVariables: SystemVariables = new SystemVariables(this.workspaceRoot ? this.workspaceRoot.fsPath : undefined)
 
