@@ -8,7 +8,7 @@ import { JediFactory } from '../languageServices/jediProxyFactory'
 import { IItemInfoSource, LanguageItemInfo } from './itemInfoSource'
 import * as proxy from './jediProxy'
 import { isPositionInsideStringOrComment } from './providerUtilities'
-import { SymbolKind, TextDocument, Position, Range, CancellationToken, CompletionItem } from 'vscode-languageserver-protocol'
+import { SymbolKind, TextDocument, Position, Range, CancellationToken, CompletionItem, InsertTextFormat } from 'vscode-languageserver-protocol'
 import { workspace, Uri } from 'coc.nvim'
 
 class DocumentPosition {
@@ -99,6 +99,7 @@ export class CompletionSource {
       (item.kind === SymbolKind.Function || item.kind === SymbolKind.Method)) {
       // tslint:disable-next-line: deprecation
       completionItem.insertText = `${item.text}($0)`
+      completionItem.insertTextFormat = InsertTextFormat.Snippet
     }
     // Ensure the built in members are at the bottom.
     completionItem.sortText = (completionItem.label.startsWith('__') ? 'z' : (completionItem.label.startsWith('_') ? 'y' : '__')) + completionItem.label
