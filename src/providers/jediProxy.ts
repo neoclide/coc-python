@@ -1,17 +1,19 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
-
 // tslint:disable:no-var-requires no-require-imports no-any
 import { ChildProcess } from 'child_process'
 import { Uri } from 'coc.nvim'
 import fs from 'fs-extra'
+import os from 'os'
 import path from 'path'
 // @ts-ignore
 import * as pidusage from 'pidusage'
 import { CancellationToken, CancellationTokenSource, CompletionItemKind, Disposable, SymbolKind } from 'vscode-languageserver-protocol'
 import { isTestExecution } from '../common/constants'
+import { emptyFn } from '../common/function'
 import { IS_WINDOWS } from '../common/platform/constants'
 import { IPythonExecutionFactory } from '../common/process/types'
+import { splitLines } from '../common/string'
 import { BANNER_NAME_PROPOSE_LS, IConfigurationService, ILogger, IPythonExtensionBanner, IPythonSettings } from '../common/types'
 import { createDeferred, Deferred } from '../common/utils/async'
 import { swallowExceptions } from '../common/utils/decorators'
@@ -20,8 +22,6 @@ import { IEnvironmentVariablesProvider } from '../common/variables/types'
 import { IInterpreterService } from '../interpreter/contracts'
 import { IServiceContainer } from '../ioc/types'
 import { Logger } from './../common/logger'
-import { splitLines } from '../common/string'
-import { emptyFn } from '../common/function'
 
 const pythonVSCodeTypeMappings = new Map<string, CompletionItemKind>()
 pythonVSCodeTypeMappings.set('none', CompletionItemKind.Value)
@@ -683,6 +683,9 @@ export class JediProxy implements Disposable {
     // Add support for paths relative to workspace.
     const extraPaths = this.pythonSettings.autoComplete ?
       this.pythonSettings.autoComplete.extraPaths.map(extraPath => {
+        if (extraPath.startsWith('~')) {
+          extraPath = os.homedir() + extraPath.slice(1)
+        }
         if (path.isAbsolute(extraPath)) {
           return extraPath
         }
