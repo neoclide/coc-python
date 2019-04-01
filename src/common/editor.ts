@@ -234,7 +234,8 @@ function getTextEditsInternal(before: string, diffs: [number, string][], startLi
 
 export function getTempFileWithDocumentContents(document: TextDocument): Promise<string> {
   return new Promise<string>((resolve, reject) => {
-    const ext = path.extname(document.uri)
+    let fsPath = Uri.parse(document.uri).fsPath
+    const ext = path.extname(fsPath)
     // Don't create file in temp folder since external utilities
     // look into configuration files in the workspace and are not able
     // to find custom rules if file is saved in a random disk location.
@@ -242,10 +243,10 @@ export function getTempFileWithDocumentContents(document: TextDocument): Promise
     // as the original one and then removed.
 
     // tslint:disable-next-line:no-require-imports
-    const fileName = `${document.uri}.${md5(document.uri)}${ext}`
+    const fileName = `${fsPath}.${md5(document.uri)}${ext}`
     fs.writeFile(fileName, document.getText(), ex => {
       if (ex) {
-        reject(`Failed to create a temporary file, ${ex.message}`)
+        reject(new Error(`Failed to create a temporary file, ${ex.message}`))
       }
       resolve(fileName)
     })

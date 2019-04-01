@@ -99,7 +99,7 @@ export abstract class BaseFormatter {
     this.outputChannel.appendLine(`\n${customError}\n${error}`)
   }
 
-  private async createTempFile(document: TextDocument): Promise<string> {
+  private createTempFile(document: TextDocument): Promise<string> {
     return getTempFileWithDocumentContents(document)
   }
 

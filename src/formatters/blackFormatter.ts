@@ -7,7 +7,6 @@ import { workspace } from 'coc.nvim'
 import { CancellationToken } from 'vscode-jsonrpc'
 import { FormattingOptions, Range, TextDocument, TextEdit } from 'vscode-languageserver-types'
 import { Product } from '../common/installer/productInstaller'
-import { StopWatch } from '../common/utils/stopWatch'
 import { IServiceContainer } from '../ioc/types'
 import { BaseFormatter } from './baseFormatter'
 
@@ -17,7 +16,6 @@ export class BlackFormatter extends BaseFormatter {
   }
 
   public formatDocument(document: TextDocument, options: FormattingOptions, token: CancellationToken, range?: Range): Thenable<TextEdit[]> {
-    const stopWatch = new StopWatch()
     const settings = workspace.getConfiguration('python', document.uri)
     const hasCustomArgs = Array.isArray(settings.formatting.blackArgs) && settings.formatting.blackArgs.length > 0
     const formatSelection = range ? range : false
