@@ -79,7 +79,12 @@ export abstract class BaseFormatter {
       })
     // tslint:disable-next-line: no-floating-promises
     promise.then(() => {
-      workspace.showMessage(`Formatting with ${this.Id}`)
+      workspace.showMessage(`Formatted with ${this.Id}`)
+      let { nvim } = workspace
+      setTimeout(async () => {
+        let line = await nvim.call('coc#util#echo_line') as string
+        if (line && /Formatted/.test(line)) nvim.command('echo ""', true)
+      }, 2000)
     })
     return promise
   }
