@@ -5,7 +5,7 @@
 
 import { inject, injectable, named } from 'inversify'
 import { compare } from 'semver'
-import { Event, Emitter, Uri } from 'coc.nvim'
+import { Event, Emitter, Uri, workspace } from 'coc.nvim'
 import { IWorkspaceService } from '../../common/application/types'
 import { IFileSystem } from '../../common/platform/types'
 import { IPersistentState, IPersistentStateFactory, Resource } from '../../common/types'
@@ -32,13 +32,14 @@ export class InterpreterAutoSelectionService implements IInterpreterAutoSelectio
     @inject(IInterpreterAutoSelectionRule) @named(AutoSelectionRule.windowsRegistry) winRegInterpreter: IInterpreterAutoSelectionRule,
     @inject(IInterpreterAutoSelectionRule) @named(AutoSelectionRule.cachedInterpreters) cachedPaths: IInterpreterAutoSelectionRule,
     @inject(IInterpreterAutoSelectionRule) @named(AutoSelectionRule.settings) private readonly userDefinedInterpreter: IInterpreterAutoSelectionRule,
+    @inject(IInterpreterAutoSelectionRule) @named(AutoSelectionRule.environment) private readonly environmentInterpreter: IInterpreterAutoSelectionRule,
     @inject(IInterpreterAutoSelectionRule) @named(AutoSelectionRule.workspaceVirtualEnvs) workspaceInterpreter: IInterpreterAutoSelectionRule,
     @inject(IInterpreterAutoSeletionProxyService) proxy: IInterpreterAutoSeletionProxyService,
     @inject(IInterpreterHelper) private readonly interpreterHelper: IInterpreterHelper) {
 
     // It is possible we area always opening the same workspace folder, but we still need to determine and cache
     // the best available interpreters based on other rules (cache for furture use).
-    this.rules.push(...[winRegInterpreter, currentPathInterpreter, systemInterpreter, cachedPaths, userDefinedInterpreter, workspaceInterpreter])
+    this.rules.push(...[winRegInterpreter, currentPathInterpreter, systemInterpreter, cachedPaths, userDefinedInterpreter, workspaceInterpreter, environmentInterpreter])
     proxy.registerInstance!(this)
     // Rules are as follows in order
     // 1. First check user settings.json
@@ -57,7 +58,8 @@ export class InterpreterAutoSelectionService implements IInterpreterAutoSelectio
     // 6. Check the entire system.
     //      If we find a good one, use that as preferred global env.
     //      Provided its better than what we have already cached as globally preffered interpreter (globallyPreferredInterpreter).
-    userDefinedInterpreter.setNextRule(workspaceInterpreter)
+    userDefinedInterpreter.setNextRule(environmentInterpreter)
+    environmentInterpreter.setNextRule(workspaceInterpreter)
     workspaceInterpreter.setNextRule(cachedPaths)
     cachedPaths.setNextRule(currentPathInterpreter)
     currentPathInterpreter.setNextRule(winRegInterpreter)
@@ -70,9 +72,9 @@ export class InterpreterAutoSelectionService implements IInterpreterAutoSelectio
       this.autoSelectedWorkspacePromises.set(key, deferred)
       await this.initializeStore(resource)
       await this.clearWorkspaceStoreIfInvalid(resource)
-      await this.userDefinedInterpreter.autoSelectInterpreter(resource, this)
+      await this.environmentInterpreter.autoSelectInterpreter(resource, this)
       this.didAutoSelectedInterpreterEmitter.fire()
-      Promise.all(this.rules.map(item => item.autoSelectInterpreter(resource, this))).catch(emptyFn)
+      Promise.all(this.rules.map(item => item.autoSelectInterpreter(resource))).catch(emptyFn)
       deferred.resolve()
     }
     return this.autoSelectedWorkspacePromises.get(key)!.promise
@@ -157,7 +159,6 @@ export class InterpreterAutoSelectionService implements IInterpreterAutoSelectio
   private getWorkspacePathKey(resource: Resource): string {
     return this.workspaceService.getWorkspaceFolderIdentifier(resource, workspacePathNameForGlobalWorkspaces)
   }
-
   private getWorkspaceState(resource: Resource): undefined | IPersistentState<PythonInterpreter | undefined> {
     const workspaceUri = this.interpreterHelper.getActiveWorkspaceUri(resource)
     if (!workspaceUri) {

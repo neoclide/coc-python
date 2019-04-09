@@ -9,6 +9,7 @@ import { traceDecorators, traceVerbose } from '../../../common/logger'
 import { IFileSystem } from '../../../common/platform/types'
 import { IPersistentState, IPersistentStateFactory, Resource } from '../../../common/types'
 // import { StopWatch } from '../../../common/utils/stopWatch'
+import { workspace } from 'coc.nvim'
 import { PythonInterpreter } from '../../contracts'
 import { AutoSelectionRule, IInterpreterAutoSelectionRule, IInterpreterAutoSelectionService } from '../types'
 
@@ -62,7 +63,6 @@ export abstract class BaseRuleService implements IInterpreterAutoSelectionRule {
     if (comparison === 0) {
       return true
     }
-
     return false
   }
   protected async clearCachedInterpreterIfInvalid(resource: Resource) {
@@ -72,11 +72,11 @@ export abstract class BaseRuleService implements IInterpreterAutoSelectionRule {
     // sendTelemetryEvent(EventName.PYTHON_INTERPRETER_AUTO_SELECTION, {}, { rule: this.ruleName, interpreterMissing: true })
     await this.cacheSelectedInterpreter(resource, undefined)
   }
-  protected async cacheSelectedInterpreter(_resource: Resource, interpreter: PythonInterpreter | undefined) {
-    // const interpreterPath = interpreter ? interpreter.path : ''
-    // const interpreterPathInCache = this.stateStore.value ? this.stateStore.value.path : ''
-    // const updated = interpreterPath === interpreterPathInCache
-    // sendTelemetryEvent(EventName.PYTHON_INTERPRETER_AUTO_SELECTION, {}, { rule: this.ruleName, updated })
+  protected async cacheSelectedInterpreter(resource: Resource, interpreter: PythonInterpreter | undefined) {
+    let { rootPath } = workspace
+    if (rootPath && interpreter && interpreter.path.toLowerCase().startsWith(rootPath)) {
+      return
+    }
     await this.stateStore.updateValue(interpreter)
   }
   protected async next(resource: Resource, manager?: IInterpreterAutoSelectionService): Promise<void> {

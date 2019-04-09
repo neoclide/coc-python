@@ -28,27 +28,7 @@ export class PythonPathUpdaterService implements IPythonPathUpdaterServiceManage
     // this.sendTelemetry(stopWatch.elapsedTime, failed, trigger, pythonPath)
     //   .catch(ex => console.error('Python Extension: sendTelemetry', ex))
   }
-  // private async sendTelemetry(duration: number, failed: boolean, trigger: 'ui' | 'shebang' | 'load', pythonPath: string) {
-  //   const telemtryProperties: PythonInterpreterTelemetry = {
-  //     failed, trigger
-  //   }
-  //   if (!failed) {
-  //     const processService = await this.executionFactory.create({ pythonPath })
-  //     const infoPromise = processService.getInterpreterInformation()
-  //       .catch<InterpreterInfomation | undefined>(() => undefined)
-  //     const pipVersionPromise = this.interpreterVersionService.getPipVersion(pythonPath)
-  //       .then(value => value.length === 0 ? undefined : value)
-  //       .catch<string>(() => '')
-  //     const [info, pipVersion] = await Promise.all([infoPromise, pipVersionPromise])
-  //     if (info && info.version) {
-  //       telemtryProperties.pythonVersion = info.version.raw
-  //     }
-  //     if (pipVersion) {
-  //       telemtryProperties.pipVersion = pipVersion
-  //     }
-  //   }
-  //   sendTelemetryEvent(EventName.PYTHON_INTERPRETER, duration, telemtryProperties)
-  // }
+
   private getPythonUpdaterService(configTarget: ConfigurationTarget, wkspace?: Uri) {
     switch (configTarget) {
       case ConfigurationTarget.Global: {

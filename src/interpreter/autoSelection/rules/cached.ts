@@ -18,11 +18,10 @@ export class CachedInterpretersAutoSelectionRule extends BaseRuleService {
     @inject(IInterpreterHelper) private readonly helper: IInterpreterHelper,
     @inject(IPersistentStateFactory) stateFactory: IPersistentStateFactory,
     @inject(IInterpreterAutoSelectionRule) @named(AutoSelectionRule.systemWide) systemInterpreter: IInterpreterAutoSelectionRule,
-    @inject(IInterpreterAutoSelectionRule) @named(AutoSelectionRule.currentPath) currentPathInterpreter: IInterpreterAutoSelectionRule,
     @inject(IInterpreterAutoSelectionRule) @named(AutoSelectionRule.windowsRegistry) winRegInterpreter: IInterpreterAutoSelectionRule) {
 
     super(AutoSelectionRule.cachedInterpreters, fs, stateFactory)
-    this.rules = [systemInterpreter, currentPathInterpreter, winRegInterpreter]
+    this.rules = [systemInterpreter, winRegInterpreter]
   }
   protected async onAutoSelectInterpreter(resource: Resource, manager?: IInterpreterAutoSelectionService): Promise<NextAction> {
     const cachedInterpreters = this.rules

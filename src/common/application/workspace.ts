@@ -19,7 +19,7 @@ export class WorkspaceService implements IWorkspaceService {
     return workspace.rootPath
   }
   public get workspaceFolders(): WorkspaceFolder[] | undefined {
-    return workspace.workspaceFolder ? [workspace.workspaceFolder] : undefined
+    return workspace.workspaceFolders
   }
   public getConfiguration(section?: string, resource?: Uri): WorkspaceConfiguration {
     return workspace.getConfiguration(section, resource ? resource.toString() : undefined)
@@ -39,14 +39,15 @@ export class WorkspaceService implements IWorkspaceService {
   }
 
   public getWorkspaceFolder(uri: Resource): WorkspaceFolder | undefined {
-    return uri ? workspace.workspaceFolder : undefined
+    if (uri) return workspace.getWorkspaceFolder(uri.toString())
+    return workspace.workspaceFolder
   }
   public get hasWorkspaceFolders(): boolean {
-    return workspace.workspaceFolder != null
+    return workspace.workspaceFolders.length > 0
   }
 
   public getWorkspaceFolderIdentifier(resource: Resource, defaultValue = ''): string {
-    const workspaceFolder = resource ? workspace.workspaceFolder : undefined
+    const workspaceFolder = resource ? this.getWorkspaceFolder(resource) : undefined
     return workspaceFolder ? Uri.parse(workspaceFolder.uri).fsPath : defaultValue
   }
 }

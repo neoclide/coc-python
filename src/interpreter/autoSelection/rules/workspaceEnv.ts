@@ -36,12 +36,6 @@ export class WorkspaceVirtualEnvInterpretersAutoSelectionRule extends BaseRuleSe
       return NextAction.runNextRule
     }
 
-    const pythonConfig = this.workspaceService.getConfiguration('python', workspacePath.folderUri)!
-    const pythonPathInConfig = pythonConfig.inspect<string>('pythonPath')!
-    // If user has defined custom values in settings for this workspace folder, then use that.
-    if (pythonPathInConfig.workspaceValue) {
-      return NextAction.runNextRule
-    }
     const pipEnvPromise = createDeferredFromPromise(this.pipEnvInterpreterLocator.getInterpreters(workspacePath.folderUri, true))
     const virtualEnvPromise = createDeferredFromPromise(this.getWorkspaceVirtualEnvInterpreters(workspacePath.folderUri))
 

@@ -8,6 +8,7 @@ import { InterpreterAutoSelectionService } from './autoSelection/index'
 import { InterpreterAutoSeletionProxyService } from './autoSelection/proxy'
 import { CachedInterpretersAutoSelectionRule } from './autoSelection/rules/cached'
 import { CurrentPathInterpretersAutoSelectionRule } from './autoSelection/rules/currentPath'
+import { EnvironmentAutoSelectionRule } from './autoSelection/rules/environment'
 import { SettingsInterpretersAutoSelectionRule } from './autoSelection/rules/settings'
 import { SystemWideInterpretersAutoSelectionRule } from './autoSelection/rules/system'
 import { WindowsRegistryInterpretersAutoSelectionRule } from './autoSelection/rules/winRegistry'
@@ -109,6 +110,7 @@ export function registerTypes(serviceManager: IServiceManager) {
   serviceManager.addSingleton<InterpreterLocatorProgressHandler>(InterpreterLocatorProgressHandler, InterpreterLocatorProgressStatubarHandler)
   serviceManager.addSingleton<IInterpreterLocatorProgressService>(IInterpreterLocatorProgressService, InterpreterLocatorProgressService)
 
+  serviceManager.addSingleton<IInterpreterAutoSelectionRule>(IInterpreterAutoSelectionRule, EnvironmentAutoSelectionRule, AutoSelectionRule.environment)
   serviceManager.addSingleton<IInterpreterAutoSelectionRule>(IInterpreterAutoSelectionRule, CurrentPathInterpretersAutoSelectionRule, AutoSelectionRule.currentPath)
   serviceManager.addSingleton<IInterpreterAutoSelectionRule>(IInterpreterAutoSelectionRule, SystemWideInterpretersAutoSelectionRule, AutoSelectionRule.systemWide)
   serviceManager.addSingleton<IInterpreterAutoSelectionRule>(IInterpreterAutoSelectionRule, WindowsRegistryInterpretersAutoSelectionRule, AutoSelectionRule.windowsRegistry)
