@@ -42,7 +42,7 @@ export class WorkspaceVirtualEnvWatcherService implements IInterpreterWatcher, D
     }
 
     const executable = this.platformService.isWindows ? 'python.exe' : 'python'
-    const patterns = [path.join('*', executable), path.join('*', '*', executable)]
+    const patterns = [path.join('**', executable)]
 
     for (const pattern of patterns) {
       // const globPatern = workspaceFolder ? new RelativePattern(workspaceFolder.uri.fsPath, pattern) : pattern

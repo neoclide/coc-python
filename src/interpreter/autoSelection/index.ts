@@ -72,7 +72,7 @@ export class InterpreterAutoSelectionService implements IInterpreterAutoSelectio
       await this.clearWorkspaceStoreIfInvalid(resource)
       await this.userDefinedInterpreter.autoSelectInterpreter(resource, this)
       this.didAutoSelectedInterpreterEmitter.fire()
-      Promise.all(this.rules.map(item => item.autoSelectInterpreter(resource))).catch(emptyFn)
+      Promise.all(this.rules.map(item => item.autoSelectInterpreter(resource, this))).catch(emptyFn)
       deferred.resolve()
     }
     return this.autoSelectedWorkspacePromises.get(key)!.promise
@@ -157,6 +157,7 @@ export class InterpreterAutoSelectionService implements IInterpreterAutoSelectio
   private getWorkspacePathKey(resource: Resource): string {
     return this.workspaceService.getWorkspaceFolderIdentifier(resource, workspacePathNameForGlobalWorkspaces)
   }
+
   private getWorkspaceState(resource: Resource): undefined | IPersistentState<PythonInterpreter | undefined> {
     const workspaceUri = this.interpreterHelper.getActiveWorkspaceUri(resource)
     if (!workspaceUri) {

@@ -205,6 +205,7 @@ export class InterpreterService implements Disposable, IInterpreterService {
     }
     return store
   }
+
   protected async updateCachedInterpreterInformation(info: PythonInterpreter, resource: Resource): Promise<void> {
     const key = JSON.stringify(info)
     if (this.updatedInterpreters.has(key)) {

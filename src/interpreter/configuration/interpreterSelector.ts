@@ -62,7 +62,7 @@ export class InterpreterSelector implements IInterpreterSelector {
     }
 
     const suggestions = await this.getSuggestions(wkspace)
-    const currentPythonPath = this.pathUtils.getDisplayName(this.configurationService.getSettings(wkspace).pythonPath, wkspace ? wkspace.fsPath : undefined)
+    const currentPythonPath = this.configurationService.getSettings(wkspace).pythonPath
     // const quickPickOptions = {
     //   matchOnDetail: true,
     //   matchOnDescription: true,
