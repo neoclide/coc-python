@@ -15,7 +15,7 @@ export class PythonPathUpdaterService implements IPythonPathUpdaterServiceManage
     const pythonPathUpdater = this.getPythonUpdaterService(configTarget, wkspace)
     let failed = false
     try {
-      await pythonPathUpdater.updatePythonPath(path.normalize(pythonPath))
+      await pythonPathUpdater.updatePythonPath(path.normalize(pythonPath), trigger)
     } catch (reason) {
       failed = true
       // tslint:disable-next-line:no-unsafe-any prefer-type-cast
@@ -24,9 +24,6 @@ export class PythonPathUpdaterService implements IPythonPathUpdaterServiceManage
       // tslint:disable-next-line: no-console
       console.error(reason)
     }
-    // do not wait for this to complete
-    // this.sendTelemetry(stopWatch.elapsedTime, failed, trigger, pythonPath)
-    //   .catch(ex => console.error('Python Extension: sendTelemetry', ex))
   }
 
   private getPythonUpdaterService(configTarget: ConfigurationTarget, wkspace?: Uri) {

@@ -8,17 +8,19 @@ import { IInterpreterAutoSeletionProxyService } from '../../interpreter/autoSele
 import { IServiceContainer } from '../../ioc/types'
 import { IWorkspaceService } from '../application/types'
 import { PythonSettings } from '../configSettings'
-import { IConfigurationService, IPythonSettings } from '../types'
+import { IConfigurationService, IPythonSettings, IPersistentStateFactory } from '../types'
 
 @injectable()
 export class ConfigurationService implements IConfigurationService {
   private readonly workspaceService: IWorkspaceService
+  private readonly stateFactory: IPersistentStateFactory
   constructor(@inject(IServiceContainer) private readonly serviceContainer: IServiceContainer) {
     this.workspaceService = this.serviceContainer.get<IWorkspaceService>(IWorkspaceService)
+    this.stateFactory = this.serviceContainer.get<IPersistentStateFactory>(IPersistentStateFactory)
   }
   public getSettings(resource?: Uri): IPythonSettings {
     const InterpreterAutoSelectionService = this.serviceContainer.get<IInterpreterAutoSeletionProxyService>(IInterpreterAutoSeletionProxyService)
-    return PythonSettings.getInstance(resource, InterpreterAutoSelectionService, this.workspaceService)
+    return PythonSettings.getInstance(resource, InterpreterAutoSelectionService, this.stateFactory, this.workspaceService)
   }
 
   public async updateSectionSetting(section: string, setting: string, value?: {}, resource?: Uri, configTarget?: ConfigurationTarget): Promise<void> {

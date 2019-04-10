@@ -1,31 +1,19 @@
 'use strict'
 
 import * as child_process from 'child_process'
-import path from 'path'
-import { DiagnosticSeverity, Disposable, Event, Emitter } from 'vscode-languageserver-protocol'
 import { ConfigurationChangeEvent, ConfigurationTarget, WorkspaceConfiguration } from 'coc.nvim'
+import path from 'path'
+import { DiagnosticSeverity, Disposable, Emitter, Event } from 'vscode-languageserver-protocol'
+import Uri from 'vscode-uri'
 import { IInterpreterAutoSeletionProxyService } from '../interpreter/autoSelection/types'
 import { IWorkspaceService } from './application/types'
 import { WorkspaceService } from './application/workspace'
 import { isTestExecution } from './constants'
+import { emptyFn } from './function'
 import { IS_WINDOWS } from './platform/constants'
-import Uri from 'vscode-uri'
-import which from 'which'
-import {
-  IAnalysisSettings,
-  IAutoCompleteSettings,
-  IDataScienceSettings,
-  IFormattingSettings,
-  ILintingSettings,
-  IPythonSettings,
-  ISortImportSettings,
-  ITerminalSettings,
-  IUnitTestSettings,
-  IWorkspaceSymbolSettings
-} from './types'
+import { IAnalysisSettings, IAutoCompleteSettings, IDataScienceSettings, IFormattingSettings, ILintingSettings, IPythonSettings, ISortImportSettings, ITerminalSettings, IUnitTestSettings, IWorkspaceSymbolSettings, IPersistentStateFactory, IPersistentState } from './types'
 import { debounce } from './utils/decorators'
 import { SystemVariables } from './variables/systemVariables'
-import { emptyFn } from './function'
 
 // tslint:disable:no-require-imports no-var-requires
 const untildify = require('untildify')
@@ -67,21 +55,25 @@ export class PythonSettings implements IPythonSettings {
     return this.changed.event
   }
 
-  constructor(workspaceFolder: Uri | undefined, private readonly interpreterAutoSelectionService: IInterpreterAutoSeletionProxyService,
+  constructor(workspaceFolder: Uri | undefined,
+    private readonly interpreterAutoSelectionService: IInterpreterAutoSeletionProxyService,
+    private readonly stateFactory: IPersistentStateFactory,
     workspace?: IWorkspaceService) {
     this.workspace = workspace || new WorkspaceService()
     this.workspaceRoot = workspaceFolder ? workspaceFolder : Uri.file(__dirname)
     this.initialize()
   }
   // tslint:disable-next-line:function-name
-  public static getInstance(resource: Uri | undefined, interpreterAutoSelectionService: IInterpreterAutoSeletionProxyService,
+  public static getInstance(resource: Uri | undefined,
+    interpreterAutoSelectionService: IInterpreterAutoSeletionProxyService,
+    stateFactory: IPersistentStateFactory,
     workspace?: IWorkspaceService): PythonSettings {
     workspace = workspace || new WorkspaceService()
     const workspaceFolderUri = PythonSettings.getSettingsUriAndTarget(resource, workspace).uri
     const workspaceFolderKey = workspaceFolderUri ? workspaceFolderUri.fsPath : ''
 
     if (!PythonSettings.pythonSettings.has(workspaceFolderKey)) {
-      const settings = new PythonSettings(workspaceFolderUri, interpreterAutoSelectionService, workspace)
+      const settings = new PythonSettings(workspaceFolderUri, interpreterAutoSelectionService, stateFactory, workspace)
       PythonSettings.pythonSettings.set(workspaceFolderKey, settings)
       // Pass null to avoid VSC from complaining about not passing in a value.
       // tslint:disable-next-line:no-any
@@ -120,21 +112,30 @@ export class PythonSettings implements IPythonSettings {
   }
   // tslint:disable-next-line:cyclomatic-complexity max-func-body-length
   protected update(pythonSettings: WorkspaceConfiguration) {
-    let python = which.sync('python')
     const workspaceRoot = this.workspaceRoot.fsPath
     const systemVariables: SystemVariables = new SystemVariables(this.workspaceRoot ? this.workspaceRoot.fsPath : undefined)
 
     // tslint:disable-next-line:no-backbone-get-set-outside-model no-non-null-assertion
     this.pythonPath = systemVariables.resolveAny(pythonSettings.get<string>('pythonPath'))!
+
     // If user has defined a custom value, use it else try to get the best interpreter ourselves.
     if (this.pythonPath.length === 0 || this.pythonPath === 'python') {
-      const autoSelectedPythonInterpreter = this.interpreterAutoSelectionService.getAutoSelectedInterpreter(this.workspaceRoot)
-      if (autoSelectedPythonInterpreter) {
-        this.interpreterAutoSelectionService.setWorkspaceInterpreter(this.workspaceRoot, autoSelectedPythonInterpreter).catch(emptyFn)
+      const workspaceRoot = this.workspaceRoot.fsPath == __dirname ? undefined : this.workspaceRoot
+      // this.stateFactory
+      let method = workspaceRoot == null ? 'createGlobalPersistentState' : 'createWorkspacePersistentState'
+      let state = this.stateFactory[method]('SelectedPythonPath', undefined) as IPersistentState<string>
+      if (state.value) {
+        this.pythonPath = state.value
+      } else {
+        const autoSelectedPythonInterpreter = this.interpreterAutoSelectionService.getAutoSelectedInterpreter(workspaceRoot)
+        if (autoSelectedPythonInterpreter) {
+          this.interpreterAutoSelectionService.setWorkspaceInterpreter(this.workspaceRoot, autoSelectedPythonInterpreter).catch(emptyFn)
+        }
+        this.pythonPath = autoSelectedPythonInterpreter ? autoSelectedPythonInterpreter.path : this.pythonPath
       }
-      this.pythonPath = autoSelectedPythonInterpreter ? autoSelectedPythonInterpreter.path : this.pythonPath
     }
     this.pythonPath = getAbsolutePath(this.pythonPath, workspaceRoot)
+    console.log('pythonPath:' + this.pythonPath)
     // tslint:disable-next-line:no-backbone-get-set-outside-model no-non-null-assertion
     this.venvPath = systemVariables.resolveAny(pythonSettings.get<string>('venvPath'))!
     this.venvFolders = systemVariables.resolveAny(pythonSettings.get<string[]>('venvFolders'))!
@@ -385,6 +386,7 @@ export class PythonSettings implements IPythonSettings {
       }
     }
   }
+
   protected initialize(): void {
     const onDidChange = () => {
       const currentConfig = this.workspace.getConfiguration('python', this.workspaceRoot)

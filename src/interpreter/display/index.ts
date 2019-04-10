@@ -55,13 +55,9 @@ export class InterpreterDisplay implements IInterpreterDisplay {
     const interpreter = await this.interpreterService.getActiveInterpreter(workspaceFolder)
     this.currentlySelectedWorkspaceFolder = workspaceFolder
     if (interpreter) {
-      // this.statusBar.color = ''
-      // this.statusBar.tooltip = this.pathUtils.getDisplayName(interpreter.path, workspaceFolder ? workspaceFolder.fsPath : undefined)
       this.statusBar.text = interpreter.displayName!
       this.currentlySelectedInterpreterPath = interpreter.path
     } else {
-      // this.statusBar.tooltip = ''
-      // this.statusBar.color = 'yellow'
       this.statusBar.text = 'No Python Interpreter'
       this.currentlySelectedInterpreterPath = undefined
     }

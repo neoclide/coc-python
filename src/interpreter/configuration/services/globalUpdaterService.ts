@@ -1,15 +1,16 @@
-import { IWorkspaceService } from '../../../common/application/types'
 import { IPythonPathUpdaterService } from '../types'
+import { IPersistentState } from '../../../common/types'
 
 export class GlobalPythonPathUpdaterService implements IPythonPathUpdaterService {
-  constructor(private readonly workspaceService: IWorkspaceService) { }
-  public async updatePythonPath(pythonPath: string): Promise<void> {
-    const pythonConfig = this.workspaceService.getConfiguration('python')
-    const pythonPathValue = pythonConfig.inspect<string>('pythonPath')
-
-    if (pythonPathValue && pythonPathValue.globalValue === pythonPath) {
+  constructor(private readonly store: IPersistentState<string | undefined>) { }
+  public async updatePythonPath(pythonPath: string, trigger: 'ui' | 'shebang' | 'load'): Promise<void> {
+    let val = this.store.value
+    if (val && trigger != 'ui') {
       return
     }
-    pythonConfig.update('pythonPath', pythonPath, true)
+    if (val && val == pythonPath) {
+      return
+    }
+    await this.store.updateValue(pythonPath)
   }
 }

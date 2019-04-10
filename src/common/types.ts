@@ -141,7 +141,7 @@ export interface ICurrentProcess {
 }
 
 export interface IPythonSettings {
-  readonly pythonPath: string
+  pythonPath: string
   readonly venvPath: string
   readonly venvFolders: string[]
   readonly condaPath: string

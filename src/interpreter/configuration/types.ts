@@ -2,7 +2,7 @@ import { ConfigurationTarget, Disposable, Uri } from 'coc.nvim'
 import { PythonInterpreter } from '../contracts'
 
 export interface IPythonPathUpdaterService {
-  updatePythonPath(pythonPath: string): Promise<void>
+  updatePythonPath(pythonPath: string, trigger: 'ui' | 'shebang' | 'load'): Promise<void>
 }
 
 export const IPythonPathUpdaterServiceFactory = Symbol('IPythonPathUpdaterServiceFactory')

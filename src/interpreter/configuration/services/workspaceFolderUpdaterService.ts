@@ -1,21 +1,19 @@
 import { Uri } from 'coc.nvim'
-import * as path from 'path'
-import { IWorkspaceService } from '../../../common/application/types'
+import { IPersistentState } from '../../../common/types'
 import { IPythonPathUpdaterService } from '../types'
 
 export class WorkspaceFolderPythonPathUpdaterService implements IPythonPathUpdaterService {
-  constructor(private workspaceFolder: Uri, private readonly workspaceService: IWorkspaceService) {
+  constructor(private workspaceFolder: Uri, private readonly workspaceStore: IPersistentState<string | undefined>) {
   }
-  public async updatePythonPath(pythonPath: string): Promise<void> {
-    const pythonConfig = this.workspaceService.getConfiguration('python', this.workspaceFolder)
-    const pythonPathValue = pythonConfig.inspect<string>('pythonPath')
-
-    if (pythonPathValue && pythonPathValue.workspaceValue === pythonPath) {
+  public async updatePythonPath(pythonPath: string, trigger: 'ui' | 'shebang' | 'load'): Promise<void> {
+    const pythonPathValue = this.workspaceStore.value
+    if (pythonPathValue && trigger != 'ui') {
       return
     }
-    if (pythonPath.toLowerCase().startsWith(this.workspaceFolder.fsPath.toLowerCase())) {
-      pythonPath = path.relative(this.workspaceFolder.fsPath, pythonPath)
+
+    if (pythonPathValue && pythonPathValue === pythonPath) {
+      return
     }
-    pythonConfig.update('pythonPath', pythonPath, false)
+    await this.workspaceStore.updateValue(pythonPath)
   }
 }

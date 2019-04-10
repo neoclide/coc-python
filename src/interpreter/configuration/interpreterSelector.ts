@@ -49,31 +49,24 @@ export class InterpreterSelector implements IInterpreterSelector {
   }
 
   protected async setInterpreter() {
-    const setInterpreterGlobally = !Array.isArray(this.workspaceService.workspaceFolders) || this.workspaceService.workspaceFolders.length === 0
+    const { workspaceFolders } = this.workspaceService
+    const setInterpreterGlobally = !Array.isArray(workspaceFolders) || workspaceFolders.length == 0
     let configTarget = ConfigurationTarget.Global
     let wkspace: Uri | undefined
     if (!setInterpreterGlobally) {
-      const targetConfig = await this.getWorkspaceToSetPythonPath()
-      if (!targetConfig) {
-        return
-      }
-      configTarget = targetConfig.configTarget
-      wkspace = targetConfig.folderUri
+      wkspace = Uri.parse(workspace.workspaceFolder.uri)
+      configTarget = ConfigurationTarget.Workspace
     }
-
     const suggestions = await this.getSuggestions(wkspace)
-    const currentPythonPath = this.configurationService.getSettings(wkspace).pythonPath
-    // const quickPickOptions = {
-    //   matchOnDetail: true,
-    //   matchOnDescription: true,
-    //   placeHolder: `current: ${currentPythonPath}`
-    // }
-
+    const settings = this.configurationService.getSettings(wkspace)
+    const currentPythonPath = settings.pythonPath
     const idx = await workspace.showQuickpick(suggestions.map(s => s.path), `Select pythonPath, current: ${currentPythonPath}`)
     if (idx !== -1) {
       let selection = suggestions[idx]
       await this.pythonPathUpdaterService.updatePythonPath(selection.path, configTarget, 'ui', wkspace)
+      workspace.nvim.command('CocRestart', true)
     }
+    // settings.
   }
 
   protected async setShebangInterpreter(): Promise<void> {
