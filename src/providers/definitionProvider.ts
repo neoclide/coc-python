@@ -25,7 +25,7 @@ export class PythonDefinitionProvider implements DefinitionProvider {
     if (doc.getline(position.line).match(/^\s*\/\//)) {
       return
     }
-    if (position.character <= 0) {
+    if (position.character < 0) {
       return
     }
 

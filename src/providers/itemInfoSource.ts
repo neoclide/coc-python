@@ -55,7 +55,7 @@ export class ItemInfoSource implements IItemInfoSource {
   private async getHoverResultFromDocument(document: TextDocument, position: Position, token: CancellationToken)
     : Promise<proxy.IHoverResult | undefined> {
     const doc = workspace.getDocument(document.uri)
-    if (position.character <= 0 || doc.getline(position.line).match(/^\s*\/\//)) {
+    if (doc.getline(position.line).match(/^\s*\/\//)) {
       return
     }
     const range = doc.getWordRangeAtPosition(position)

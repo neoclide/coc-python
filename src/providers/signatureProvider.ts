@@ -119,7 +119,7 @@ export class PythonSignatureProvider implements SignatureHelpProvider {
 
   public provideSignatureHelp(document: TextDocument, position: Position, token: CancellationToken): Thenable<SignatureHelp | null> {
     // early exit if we're in a string or comment (or in an undefined position)
-    if (position.character <= 0 ||
+    if (position.character < 0 ||
       isPositionInsideStringOrComment(document, position)) {
       return Promise.resolve(null)
     }

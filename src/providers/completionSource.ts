@@ -66,7 +66,7 @@ export class CompletionSource {
 
   private async getCompletionResult(document: TextDocument, position: Position, token: CancellationToken)
     : Promise<proxy.ICompletionResult | undefined> {
-    if (position.character <= 0 ||
+    if (position.character < 0 ||
       isPositionInsideStringOrComment(document, position)) {
       return undefined
     }

@@ -29,9 +29,6 @@ export class PythonRenameProvider implements RenameProvider {
     if (doc.getline(position.line).match(/^\s*\/\//)) {
       return
     }
-    if (position.character <= 0) {
-      return
-    }
 
     const range = doc.getWordRangeAtPosition(position)
     const isEmpty = range.start.line == range.end.line && range.start.character == range.end.character

@@ -34,9 +34,6 @@ export class PythonReferenceProvider implements ReferenceProvider {
     if (doc.getline(position.line).match(/^\s*\/\//)) {
       return
     }
-    if (position.character <= 0) {
-      return
-    }
 
     const range = doc.getWordRangeAtPosition(position)
     if (!range) {
