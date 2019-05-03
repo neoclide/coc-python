@@ -18,13 +18,13 @@ In your vim/neovim, run command:
 :CocInstall coc-python
 ```
 
-**Note:** lastest master of [coc.nvim](https://github.com/neoclide/coc.nvim)
-required to make it work.
+**Note:** the latest master of [coc.nvim](https://github.com/neoclide/coc.nvim)
+is required to make it work.
 
 ## Optional steps
 
-- To use Microsoft Python Language Server, add `"python.jediEnabled": false` in your settings file.
-- When jedi is not enabled, Language server would be downloaded, make sure you have coc statusline integrated, checkout `:h coc-status`.
+- To use the Microsoft Python Language Server, add `"python.jediEnabled": false` in your settings file.
+- When jedi is not enabled, the language server will be downloaded. Make sure you have coc statusline integrated, check out `:h coc-status`.
 - [Install a linter](https://code.visualstudio.com/docs/python/linting) to get errors and warnings -- you can further customize linting rules to fit your needs.
 - Select your preferred Python interpreter/version/environment using the `Select Interpreter` command.
   - By default we use the one that's on your path.
@@ -56,7 +56,7 @@ Except from `test`, `debug` and `datascience` features of [vscode-python](https:
 - Intellisense and autocomplete (including PEP 484 and PEP 526 support)
   - Ability to include custom module paths (e.g. include paths for libraries like Google App Engine, etc.; use the setting `python.autoComplete.extraPaths = []`)
 - Code formatting
-  - Auto formatting of code upon saving changes (default to 'Off')
+  - Auto-formatting of code upon saving changes (default to 'Off')
   - Use either [yapf](https://pypi.org/project/yapf/), [autopep8](https://pypi.org/project/autopep8/), or [Black](https://pypi.org/project/black/) for code formatting (defaults to autopep8)
 - Linting
   - Support for multiple linters with custom settings (default is [Pylint](https://pypi.org/project/pylint/), but [Prospector](https://pypi.org/project/prospector/), [Flake8](https://pypi.org/project/flake8/), [pylama](https://pypi.org/project/pylama/), [pydocstyle](https://pypi.org/project/pydocstyle/), and [mypy](https://pypi.org/project/mypy/) are also supported)
@@ -157,7 +157,7 @@ Except from `test`, `debug` and `datascience` features of [vscode-python](https:
 - `python.workspaceSymbols.exclusionPatterns`:Pattern used to exclude files and folders from ctags See http://ctags.sourceforge.net/ctags.html., default: `["**/site-packages/**"]`
 - `python.workspaceSymbols.rebuildOnFileSave`:Whether to re-build the tags file on when changes made to python files are saved., default: `true`
 - `python.workspaceSymbols.rebuildOnStart`:Whether to re-build the tags file on start (defaults to true)., default: `true`
-- `python.workspaceSymbols.tagFilePath`:Fully qualified path to tag file (exuberant ctag file), used to provide workspace symbols., default: `"${workspaceFolder}/.vscode/tags"`
+- `python.workspaceSymbols.tagFilePath`:Fully qualified path to tag file (exuberant ctags file), used to provide workspace symbols., default: `"${workspaceFolder}/.vscode/tags"`
 
 ## F.A.Q
 
