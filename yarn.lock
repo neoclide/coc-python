@@ -967,6 +967,11 @@ once@^1.3.0:
   dependencies:
     wrappy "1"
 
+os-tmpdir@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/os-tmpdir/-/os-tmpdir-2.0.0.tgz#610a70c5c2a986d5fef3830c429a837c4c4b2968"
+  integrity sha512-wZojVQP1fR3zW/Z9YLGJz4etXiu5d2tm4D6R4w2FTx1BAx9F1T+tEBb4+0deWQoskF1xe9zgBr/9mYwE+KY3xw==
+
 p-limit@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/p-limit/-/p-limit-2.2.0.tgz#417c9941e6027a9abcba5092dd2904e255b5fbc2"
