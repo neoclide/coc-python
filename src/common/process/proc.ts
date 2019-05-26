@@ -46,7 +46,7 @@ export class ProcessService implements IProcessService {
     let procExited = false
 
     const output = new Observable<Output<string>>(subscriber => {
-      const disposables: IDisposable[] = []
+      let disposables: IDisposable[] = []
 
       const on = (ee: NodeJS.EventEmitter, name: string, fn: Function) => {
         ee.on(name, fn as any)
@@ -54,12 +54,12 @@ export class ProcessService implements IProcessService {
       }
 
       if (options.token) {
-        disposables.push(options.token.onCancellationRequested(() => {
+        options.token.onCancellationRequested(() => {
           if (!procExited && !proc.killed) {
             proc.kill()
             procExited = true
           }
-        }))
+        }, null, disposables)
       }
 
       const sendOutput = (source: 'stdout' | 'stderr', data: Buffer) => {
@@ -78,11 +78,13 @@ export class ProcessService implements IProcessService {
         procExited = true
         subscriber.complete()
         disposables.forEach(disposable => disposable.dispose())
+        disposables = []
       })
       proc.once('error', ex => {
         procExited = true
         subscriber.error(ex)
         disposables.forEach(disposable => disposable.dispose())
+        disposables = []
       })
     })
 
