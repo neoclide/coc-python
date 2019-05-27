@@ -1,9 +1,11 @@
 import { getTextEditsFromPatch } from '../common/editor'
 import { IConfigurationService, IInstaller, Product, IPythonSettings } from '../common/types'
+import { Commands } from '../common/constants'
 import { IServiceContainer } from '../ioc/types'
 import { RefactorProxy } from '../refactor/proxy'
-import { workspace, Document, ExtensionContext, OutputChannel, commands, Uri } from 'coc.nvim'
-import { Range, Position } from 'vscode-languageserver-types'
+import { workspace, languages, CodeActionProvider, Document, ExtensionContext, OutputChannel, commands, Uri } from 'coc.nvim'
+import { Range, Position, TextDocument, CodeActionContext, Command, CodeActionKind } from 'vscode-languageserver-types'
+import { CancellationToken } from 'vscode-languageserver-protocol'
 
 interface RenameResponse {
   results: [{ diff: string }]
@@ -11,31 +13,59 @@ interface RenameResponse {
 
 let installer: IInstaller
 
+async function checkDocument(uri: string): Promise<boolean> {
+  let doc = workspace.getDocument(uri)
+  if (!doc) return false
+  let modified = await doc.buffer.getOption('modified')
+  if (modified != 0) {
+    workspace.showMessage('Buffer not saved, please save the buffer first!', 'warning')
+    return false
+  }
+  return true
+}
+
 export function activateSimplePythonRefactorProvider(context: ExtensionContext, outputChannel: OutputChannel, serviceContainer: IServiceContainer): void {
   installer = serviceContainer.get<IInstaller>(IInstaller)
-  let disposable = commands.registerCommand('python.refactorExtractVariable', async () => {
-    const doc = await workspace.document
-    const mode = await workspace.nvim.call('visualmode')
-    const range = await workspace.getSelectedRange(mode, doc.textDocument)
+  let disposable = commands.registerCommand(Commands.Refactor_Extract_Variable, async (document: TextDocument, range: Range) => {
+    let valid = await checkDocument(document.uri)
+    if (!valid) return
     extractVariable(context.extensionPath,
-      doc,
+      workspace.getDocument(document.uri),
       range,
       // tslint:disable-next-line:no-empty
       outputChannel, serviceContainer).catch(() => { })
-  })
+  }, null, true)
   context.subscriptions.push(disposable)
 
-  disposable = commands.registerCommand('python.refactorExtractMethod', async () => {
-    const doc = await workspace.document
-    const mode = await workspace.nvim.call('visualmode')
-    const range = await workspace.getSelectedRange(mode, doc.textDocument)
+  disposable = commands.registerCommand(Commands.Refactor_Extract_Method, async (document: TextDocument, range: Range) => {
+    let valid = await checkDocument(document.uri)
+    if (!valid) return
     extractMethod(context.extensionPath,
-      doc,
+      workspace.getDocument(document.uri),
       range,
       // tslint:disable-next-line:no-empty
       outputChannel, serviceContainer).catch(() => { })
-  })
+  }, null, true)
   context.subscriptions.push(disposable)
+
+  let provider: CodeActionProvider = {
+    provideCodeActions: (document: TextDocument, range: Range, actionContext: CodeActionContext, _token: CancellationToken): Command[] => {
+      let commands: Command[] = []
+      if (actionContext.only && !actionContext.only.includes(CodeActionKind.Refactor)) return []
+      commands.push({
+        command: Commands.Refactor_Extract_Variable,
+        title: 'Extract Variable',
+        arguments: [document, range]
+      })
+      commands.push({
+        command: Commands.Refactor_Extract_Method,
+        title: 'Extract Method',
+        arguments: [document, range]
+      })
+      return commands
+    }
+  }
+  languages.registerCodeActionProvider(['python'], provider, 'python.simpleRefactor', [CodeActionKind.Refactor])
 }
 
 // Exported for unit testing
@@ -128,12 +158,13 @@ function extractName(textEditor: Document, newName: string,
     if (newWordPosition) {
       return workspace.nvim.command('wa').then(() => {
         // Now that we have selected the new variable, lets invoke the rename command
-        return commands.executeCommand('editor.action.rename')
+        return commands.executeCommand('editor.action.rename', textEditor.uri, newWordPosition)
       })
     }
   }).catch(error => {
     if (error === 'Not installed') {
       installer.promptToInstall(Product.rope, Uri.parse(textEditor.uri))
+        // tslint:disable-next-line: no-console
         .catch(ex => console.error('Python Extension: simpleRefactorProvider.promptToInstall', ex))
       return Promise.reject('')
     }
