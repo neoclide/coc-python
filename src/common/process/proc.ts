@@ -74,18 +74,19 @@ export class ProcessService implements IProcessService {
       on(proc.stdout, 'data', (data: Buffer) => sendOutput('stdout', data))
       on(proc.stderr, 'data', (data: Buffer) => sendOutput('stderr', data))
 
-      proc.once('close', () => {
+      const onExit = (ex?: any) => {
+        if (procExited) return
         procExited = true
+        if (ex) subscriber.error(ex)
         subscriber.complete()
         disposables.forEach(disposable => disposable.dispose())
         disposables = []
+      }
+
+      proc.once('close', () => {
+        onExit()
       })
-      proc.once('error', ex => {
-        procExited = true
-        subscriber.error(ex)
-        disposables.forEach(disposable => disposable.dispose())
-        disposables = []
-      })
+      proc.once('error', onExit)
     })
 
     return {
