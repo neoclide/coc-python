@@ -46,20 +46,15 @@ export class ProcessService implements IProcessService {
     let procExited = false
 
     const output = new Observable<Output<string>>(subscriber => {
-      let disposables: IDisposable[] = []
-
-      const on = (ee: NodeJS.EventEmitter, name: string, fn: Function) => {
-        ee.on(name, fn as any)
-        disposables.push({ dispose: () => ee.removeListener(name, fn as any) as any })
-      }
+      let disposable: IDisposable = null
 
       if (options.token) {
-        options.token.onCancellationRequested(() => {
+        disposable = options.token.onCancellationRequested(() => {
           if (!procExited && !proc.killed) {
             proc.kill()
             procExited = true
           }
-        }, null, disposables)
+        })
       }
 
       const sendOutput = (source: 'stdout' | 'stderr', data: Buffer) => {
@@ -70,17 +65,20 @@ export class ProcessService implements IProcessService {
           subscriber.next({ source, out })
         }
       }
-
-      on(proc.stdout, 'data', (data: Buffer) => sendOutput('stdout', data))
-      on(proc.stderr, 'data', (data: Buffer) => sendOutput('stderr', data))
+      proc.stdout.on('data', (data: Buffer) => sendOutput('stdout', data))
+      proc.stderr.on('data', (data: Buffer) => sendOutput('stderr', data))
 
       const onExit = (ex?: any) => {
         if (procExited) return
+        proc.stdout.removeAllListeners()
+        proc.stderr.removeAllListeners()
         procExited = true
         if (ex) subscriber.error(ex)
         subscriber.complete()
-        disposables.forEach(disposable => disposable.dispose())
-        disposables = []
+        if (disposable) {
+          disposable.dispose()
+          disposable = null
+        }
       }
 
       proc.once('close', () => {
@@ -104,26 +102,20 @@ export class ProcessService implements IProcessService {
     const encoding = spawnOptions.encoding ? spawnOptions.encoding : 'utf8'
     const proc = spawn(file, args, spawnOptions)
     const deferred = createDeferred<ExecutionResult<string>>()
-    const disposables: IDisposable[] = []
-    let disposed = false
-
-    const on = (ee: NodeJS.EventEmitter, name: string, fn: Function) => {
-      ee.on(name, fn as any)
-      disposables.push({ dispose: () => ee.removeListener(name, fn as any) as any })
-    }
+    let disposable: IDisposable = null
 
     if (options.token) {
-      disposables.push(options.token.onCancellationRequested(() => {
+      disposable = options.token.onCancellationRequested(() => {
         if (!proc.killed && !deferred.completed) {
           proc.kill()
         }
-      }))
+      })
     }
 
     const stdoutBuffers: Buffer[] = []
-    on(proc.stdout, 'data', (data: Buffer) => stdoutBuffers.push(data))
+    proc.stdout.on('data', (data: Buffer) => stdoutBuffers.push(data))
     const stderrBuffers: Buffer[] = []
-    on(proc.stderr, 'data', (data: Buffer) => {
+    proc.stderr.on('data', (data: Buffer) => {
       if (options.mergeStdOutErr) {
         stdoutBuffers.push(data)
         stderrBuffers.push(data)
@@ -143,15 +135,17 @@ export class ProcessService implements IProcessService {
         const stdout = this.decoder.decode(stdoutBuffers, encoding)
         deferred.resolve({ stdout, stderr })
       }
-      if (disposed) return
-      disposed = true
-      disposables.forEach(disposable => disposable.dispose())
+      if (disposable) {
+        disposable.dispose()
+        disposable = null
+      }
     })
     proc.once('error', ex => {
       deferred.reject(ex)
-      if (disposed) return
-      disposed = true
-      disposables.forEach(disposable => disposable.dispose())
+      if (disposable) {
+        disposable.dispose()
+        disposable = null
+      }
     })
 
     return deferred.promise
