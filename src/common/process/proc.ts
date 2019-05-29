@@ -3,7 +3,6 @@
 import { exec, spawn } from 'child_process'
 import { Observable } from 'rxjs/Observable'
 import tk from 'tree-kill'
-import { IDisposable } from '../types'
 import { createDeferred } from '../utils/async'
 import { EnvironmentVariables } from '../variables/types'
 import { DEFAULT_ENCODING } from './constants'
@@ -46,10 +45,9 @@ export class ProcessService implements IProcessService {
     let procExited = false
 
     const output = new Observable<Output<string>>(subscriber => {
-      let disposable: IDisposable = null
 
       if (options.token) {
-        disposable = options.token.onCancellationRequested(() => {
+        options.token.onCancellationRequested(() => {
           if (!procExited && !proc.killed) {
             proc.kill()
             procExited = true
@@ -70,15 +68,9 @@ export class ProcessService implements IProcessService {
 
       const onExit = (ex?: any) => {
         if (procExited) return
-        proc.stdout.removeAllListeners()
-        proc.stderr.removeAllListeners()
         procExited = true
         if (ex) subscriber.error(ex)
         subscriber.complete()
-        if (disposable) {
-          disposable.dispose()
-          disposable = null
-        }
       }
 
       proc.once('close', () => {
@@ -102,10 +94,9 @@ export class ProcessService implements IProcessService {
     const encoding = spawnOptions.encoding ? spawnOptions.encoding : 'utf8'
     const proc = spawn(file, args, spawnOptions)
     const deferred = createDeferred<ExecutionResult<string>>()
-    let disposable: IDisposable = null
 
     if (options.token) {
-      disposable = options.token.onCancellationRequested(() => {
+      options.token.onCancellationRequested(() => {
         if (!proc.killed && !deferred.completed) {
           proc.kill()
         }
@@ -135,17 +126,9 @@ export class ProcessService implements IProcessService {
         const stdout = this.decoder.decode(stdoutBuffers, encoding)
         deferred.resolve({ stdout, stderr })
       }
-      if (disposable) {
-        disposable.dispose()
-        disposable = null
-      }
     })
     proc.once('error', ex => {
       deferred.reject(ex)
-      if (disposable) {
-        disposable.dispose()
-        disposable = null
-      }
     })
 
     return deferred.promise
