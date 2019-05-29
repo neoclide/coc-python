@@ -105,6 +105,7 @@ export class ProcessService implements IProcessService {
     const proc = spawn(file, args, spawnOptions)
     const deferred = createDeferred<ExecutionResult<string>>()
     const disposables: IDisposable[] = []
+    let disposed = false
 
     const on = (ee: NodeJS.EventEmitter, name: string, fn: Function) => {
       ee.on(name, fn as any)
@@ -142,10 +143,14 @@ export class ProcessService implements IProcessService {
         const stdout = this.decoder.decode(stdoutBuffers, encoding)
         deferred.resolve({ stdout, stderr })
       }
+      if (disposed) return
+      disposed = true
       disposables.forEach(disposable => disposable.dispose())
     })
     proc.once('error', ex => {
       deferred.reject(ex)
+      if (disposed) return
+      disposed = true
       disposables.forEach(disposable => disposable.dispose())
     })
 
