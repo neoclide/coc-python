@@ -15,7 +15,7 @@ import { ILintMessage } from './types'
 const pylintrc = 'pylintrc'
 const dotPylintrc = '.pylintrc'
 
-const REGEX = '(?<line>\\d+),(?<column>-?\\d+),(?<type>\\w+),(?<code>[\\w-]+):(?<message>.*)\\r?(\\n|$)'
+const REGEX = '(?<line>\\d+),(?<column>-?\\d+),(?<type>\\w+),(?<code>[^:]+):(?<message>.*)\\r?(\\n|$)'
 
 export class Pylint extends BaseLinter {
   private fileSystem: IFileSystem
@@ -69,7 +69,7 @@ export class Pylint extends BaseLinter {
       ]
     }
     const args = [
-      '--msg-template=\'{line},{column},{category},{symbol}:{msg}\'',
+      '--msg-template=\'{line},{column},{category},{msg_id}:{msg} ({symbol})\'',
       '--reports=n',
       '--output-format=text',
       uri.fsPath
