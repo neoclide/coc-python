@@ -72,7 +72,7 @@ Except from `test`, `debug` and `datascience` features of [vscode-python](https:
 
 ## Options
 
-- `python.autoComplete.addBrackets`:Automatically add brackets for functions., default: `false`
+- `python.autoComplete.addBrackets`:Automatically add brackets for functions, not work for MPLS., default: `false`
 - `python.autoComplete.extraPaths`:List of paths to libraries and the like that need to be imported by auto complete engine. E.g. when using Google App SDK, the paths are not in system path, hence need to be added into this list., default: `[]`
 - `python.autoComplete.showAdvancedMembers`:Controls appearance of methods with double underscores in the completion list., default: `true`
 - `python.autoComplete.typeshedPaths`:Specifies paths to local typeshed repository clone(s) for the Python language server., default: `[]`
