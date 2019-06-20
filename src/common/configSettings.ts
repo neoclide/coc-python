@@ -134,7 +134,6 @@ export class PythonSettings implements IPythonSettings {
       }
     }
     this.pythonPath = getAbsolutePath(this.pythonPath, workspaceRoot)
-    console.log('pythonPath:' + this.pythonPath)
     // tslint:disable-next-line:no-backbone-get-set-outside-model no-non-null-assertion
     this.venvPath = systemVariables.resolveAny(pythonSettings.get<string>('venvPath'))!
     this.venvFolders = systemVariables.resolveAny(pythonSettings.get<string[]>('venvFolders'))!

@@ -61,9 +61,7 @@ export class LanguageServerPackageService implements ILanguageServerPackageServi
     if (settings.analysis.downloadChannel) {
       return settings.analysis.downloadChannel
     }
-
-    const isAlphaVersion = this.isAlphaVersionOfExtension()
-    return isAlphaVersion ? 'beta' : 'stable'
+    return 'stable'
   }
   protected getValidPackage(packages: NugetPackage[]): NugetPackage {
     const nugetService = this.serviceContainer.get<INugetService>(INugetService)

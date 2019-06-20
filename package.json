@@ -1,7 +1,7 @@
 {
   "name": "coc-python",
   "version": "1.1.14",
-  "languageServerVersion": "0.2.82",
+  "languageServerVersion": "0.2.92",
   "description": "Python extension for coc.nvim, forked from vscode-python.",
   "main": "lib/index.js",
   "publisher": "chemzqm",
@@ -105,6 +105,11 @@
       {
         "command": "python.setInterpreter",
         "title": "Select Interpreter",
+        "category": "Python"
+      },
+      {
+        "command": "python.upgradePythonLanguageServer",
+        "title": "Upgrade MPLS to latest stable version, restart coc.nvim required to take effect.",
         "category": "Python"
       },
       {
@@ -272,6 +277,16 @@
           "default": "",
           "description": "Path to directory containing the Jedi library (this path will contain the 'Jedi' sub directory).",
           "scope": "resource"
+        },
+        "python.analysis.downloadChannel": {
+          "type": "string",
+          "enum": [
+            "stable",
+            "beta",
+            "daily"
+          ],
+          "default": "stable",
+          "description": "Defines how to down MPLS, use beta for beta version, or daily for upgrade to stable when possible, stable means MPLS only upgraded when coc-python upgraded."
         },
         "python.analysis.openFilesOnly": {
           "type": "boolean",

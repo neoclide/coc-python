@@ -10,6 +10,7 @@ import { traceDecorators } from '../../common/logger'
 import { NugetPackage } from '../../common/nuget/types'
 import { IFileSystem } from '../../common/platform/types'
 import { IConfigurationService, IExtensionContext, LanguageServerDownloadChannels } from '../../common/types'
+import { IApplicationEnvironment } from '../../common/application/types'
 import { IServiceContainer } from '../../ioc/types'
 import { FolderVersionPair, IDownloadChannelRule, ILanguageServerFolderService, ILanguageServerPackageService } from '../types'
 
@@ -19,6 +20,7 @@ const languageServerFolder = 'languageServer'
 export class LanguageServerFolderService implements ILanguageServerFolderService {
   constructor(
     @inject(IServiceContainer) private readonly serviceContainer: IServiceContainer,
+    @inject(IApplicationEnvironment) private readonly appEnv: IApplicationEnvironment,
     @inject(IExtensionContext) private readonly context: IExtensionContext
   ) { }
 
@@ -54,6 +56,11 @@ export class LanguageServerFolderService implements ILanguageServerFolderService
     if (currentFolder && (!autoUpdateLanguageServer || !downloadLanguageServer)) {
       return false
     }
+    const minimumVersion = this.appEnv.packageJson.languageServerVersion as string
+    if (autoUpdateLanguageServer && (!currentFolder || currentFolder.version.compare(minimumVersion) < 0)) {
+      return true
+    }
+
     const downloadChannel = this.getDownloadChannel()
     const rule = this.serviceContainer.get<IDownloadChannelRule>(IDownloadChannelRule, downloadChannel)
     return rule.shouldLookForNewLanguageServer(currentFolder)
