@@ -645,6 +645,9 @@ if __name__ == '__main__':
 
     sys.path.insert(0, jediPath)
     import jedi
+    digits = jedi.__version__.split('.')
+    if int(digits[0]) == 0 and int(digits[1]) <= 12:
+         raise RuntimeError('Jedi version %s too old, requires >= 0.13.0' % (jedi.__version__))
     if jediPreview:
         jedi.settings.cache_directory = os.path.join(
             jedi.settings.cache_directory, cachePrefix + jedi.__version__.replace('.', ''))

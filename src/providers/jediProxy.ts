@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 // tslint:disable:no-var-requires no-require-imports no-any
 import { ChildProcess } from 'child_process'
-import { Uri } from 'coc.nvim'
+import { Uri, workspace } from 'coc.nvim'
 import fs from 'fs-extra'
 import os from 'os'
 import path from 'path'
@@ -341,6 +341,7 @@ export class JediProxy implements Disposable {
 
   private handleError(source: string, errorMessage: string) {
     Logger.error(`${source} jediProxy`, `Error (${source}) ${errorMessage}`)
+    workspace.showMessage(`Jedi error: ${errorMessage}`, 'error')
   }
 
   // tslint:disable-next-line:max-func-body-length
