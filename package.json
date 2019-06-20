@@ -160,6 +160,12 @@
           "description": "Controls appearance of methods with double underscores in the completion list.",
           "scope": "resource"
         },
+        "python.jediShortcut": {
+          "type": "string",
+          "description": "Shortcut used for jedi completion.",
+          "default": "JD",
+          "scope": "resource"
+        },
         "python.autoComplete.typeshedPaths": {
           "type": "array",
           "items": {

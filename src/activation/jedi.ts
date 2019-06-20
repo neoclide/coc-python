@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import { inject, injectable } from 'inversify'
-import { languages } from 'coc.nvim'
+import { languages, workspace } from 'coc.nvim'
 import { DocumentFilter } from 'vscode-languageserver-protocol'
 import { PYTHON } from '../common/constants'
 import { IConfigurationService, IExtensionContext, Resource } from '../common/types'
@@ -28,9 +28,12 @@ export class JediExtensionActivator implements ILanguageServerActivator {
   private readonly context: IExtensionContext
   private jediFactory?: JediFactory
   private readonly documentSelector: DocumentFilter[]
+  private shortcut: string
   constructor(@inject(IServiceManager) private serviceManager: IServiceManager) {
     this.context = this.serviceManager.get<IExtensionContext>(IExtensionContext)
     this.documentSelector = PYTHON
+    let config = workspace.getConfiguration('python')
+    this.shortcut = config.get<string>('jediShortcut', 'JD')
   }
 
   public async activate(_resource: Resource): Promise<void> {
@@ -59,7 +62,7 @@ export class JediExtensionActivator implements ILanguageServerActivator {
     context.subscriptions.push(
       languages.registerCompletionItemProvider(
         'jedi',
-        'JD',
+        this.shortcut,
         ['python'],
         new PythonCompletionItemProvider(jediFactory, this.serviceManager),
         ['.']
