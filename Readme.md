@@ -34,12 +34,13 @@ required to make it work.
 
 Open the Command List (use `:CocCommand` command in vim) and type in one of the following commands:
 
-| Command                 | Description                                                                              |
-| ----------------------- | ---------------------------------------------------------------------------------------- |
-| `python.setInterpreter` | Switch between Python interpreters, versions, and environments.                          |
-| `python.startREPL`      | Start an interactive Python REPL using the selected interpreter in the VS Code terminal. |
-| `python.execInTerminal` | Runs the active Python file in the VS Code terminal.                                     |
-| `python.setLinter`      | Switch from PyLint to flake8 or other supported linters.                                 |
+| Command                              | Description                                                                              |
+| ------------------------------------ | ---------------------------------------------------------------------------------------- |
+| `python.setInterpreter`              | Switch between Python interpreters, versions, and environments.                          |
+| `python.startREPL`                   | Start an interactive Python REPL using the selected interpreter in the VS Code terminal. |
+| `python.execInTerminal`              | Runs the active Python file in the VS Code terminal.                                     |
+| `python.setLinter`                   | Switch from PyLint to flake8 or other supported linters.                                 |
+| `python.upgradePythonLanguageServer` | Upgrade MPLS to latest stable version.                                                   |
 
 To see all available Python commands, open the Command Palette and type `Python`.
 

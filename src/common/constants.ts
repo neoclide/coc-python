@@ -13,6 +13,7 @@ export const PVSC_EXTENSION_ID = 'ms-python.python'
 
 export namespace Commands {
   export const Set_Interpreter = 'python.setInterpreter'
+  export const Upgrade_Languageserver = 'python.upgradePythonLanguageServer'
   export const Set_ShebangInterpreter = 'python.setShebangInterpreter'
   export const Exec_In_Terminal = 'python.execInTerminal'
   export const Exec_Selection_In_Terminal = 'python.execSelectionInTerminal'

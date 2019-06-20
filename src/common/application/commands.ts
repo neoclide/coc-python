@@ -16,6 +16,7 @@ export type CommandsWithoutArgs = keyof ICommandNameWithoutArgumentTypeMapping
  */
 interface ICommandNameWithoutArgumentTypeMapping {
   ['python.debugger.replaceExperimental']: []
+  [Commands.Upgrade_Languageserver]: []
   [Commands.Set_Interpreter]: []
   [Commands.Set_ShebangInterpreter]: []
   [Commands.Run_Linter]: []
