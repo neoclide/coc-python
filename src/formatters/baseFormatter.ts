@@ -12,6 +12,7 @@ import { Uri, OutputChannel, workspace } from 'coc.nvim'
 import { TextDocument, FormattingOptions, Range, TextEdit } from 'vscode-languageserver-types'
 import { CancellationToken } from 'vscode-jsonrpc'
 import { emptyFn } from '../common/function'
+import { promisify } from 'util'
 
 export abstract class BaseFormatter {
   protected readonly outputChannel: OutputChannel
@@ -72,18 +73,17 @@ export abstract class BaseFormatter {
         this.handleError(this.Id, error, Uri.parse(document.uri)).catch(() => { })
         return [] as TextEdit[]
       })
-      .then(edits => {
-        this.deleteTempFile(filepath, tempFile).catch(emptyFn)
-        return edits
-      })
     // tslint:disable-next-line: no-floating-promises
     promise.then(() => {
+      this.deleteTempFile(filepath, tempFile).catch(emptyFn)
       workspace.showMessage(`Formatted with ${this.Id}`)
       let { nvim } = workspace
       setTimeout(async () => {
         let line = await nvim.call('coc#util#echo_line') as string
         if (line && /Formatted/.test(line)) nvim.command('echo ""', true)
       }, 2000)
+    }, () => {
+      this.deleteTempFile(filepath, tempFile).catch(emptyFn)
     })
     return promise
   }
@@ -107,9 +107,9 @@ export abstract class BaseFormatter {
     return getTempFileWithDocumentContents(document)
   }
 
-  private deleteTempFile(originalFile: string, tempFile: string): Promise<void> {
+  private deleteTempFile(originalFile: string, tempFile: string): Promise<any> {
     if (originalFile !== tempFile) {
-      return fs.unlink(tempFile)
+      return promisify(fs.unlink)(tempFile)
     }
     return Promise.resolve()
   }
