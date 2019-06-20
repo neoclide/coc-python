@@ -115,6 +115,7 @@ export class LanguageServerAnalysisOptions implements ILanguageServerAnalysisOpt
       // Register the server for Python documents
       documentSelector,
       workspaceFolder: workspace.workspaceFolder,
+      disableDiagnostics: !settings.analysis.diagnosticEnabled,
       synchronize: {
         configurationSection: PYTHON_LANGUAGE
       },

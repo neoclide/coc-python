@@ -300,6 +300,12 @@
           "description": "Only show errors and warnings for open files rather than for the entire workspace.",
           "scope": "resource"
         },
+        "python.analysis.diagnosticEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable diagnostic support of language server.",
+          "scope": "resource"
+        },
         "python.analysis.diagnosticPublishDelay": {
           "type": "integer",
           "default": 1000,

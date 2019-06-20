@@ -272,6 +272,7 @@ export interface ITerminalSettings {
 
 export type LanguageServerDownloadChannels = 'stable' | 'beta' | 'daily'
 export interface IAnalysisSettings {
+  readonly diagnosticEnabled: boolean
   readonly downloadChannel?: LanguageServerDownloadChannels
   readonly openFilesOnly: boolean
   readonly typeshedPaths: string[]
