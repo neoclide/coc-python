@@ -1,9 +1,8 @@
 // tslint:disable:max-classes-per-file max-classes-per-file
 
-import { OutputChannel, workspace } from 'coc.nvim'
+import { Uri, OutputChannel, workspace } from 'coc.nvim'
 import { inject, injectable, named } from 'inversify'
 import * as os from 'os'
-import Uri from 'vscode-uri'
 import { IServiceContainer } from '../../ioc/types'
 import { IApplicationShell, ICommandManager } from '../application/types'
 import { Commands, STANDARD_OUTPUT_CHANNEL } from '../constants'

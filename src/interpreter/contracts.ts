@@ -1,7 +1,6 @@
 import { SemVer } from 'semver'
 import { Disposable, Event, TextDocument } from 'vscode-languageserver-protocol'
-import Uri from 'vscode-uri'
-import { ConfigurationTarget, CodeLensProvider } from 'coc.nvim'
+import { Uri, ConfigurationTarget, CodeLensProvider } from 'coc.nvim'
 import { InterpreterInfomation } from '../common/process/types'
 import { Resource } from '../common/types'
 

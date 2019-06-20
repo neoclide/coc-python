@@ -5,7 +5,7 @@ import md5 from 'md5'
 import { EOL } from 'os'
 import * as path from 'path'
 import { Position, Range, TextDocument, TextEdit, WorkspaceEdit } from 'vscode-languageserver-protocol'
-import Uri from 'vscode-uri'
+import { Uri } from 'coc.nvim'
 import { IEditorUtils } from './types'
 
 // Code borrowed from goFormat.ts (Go Extension for VS Code)

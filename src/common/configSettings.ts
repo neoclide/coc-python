@@ -1,10 +1,9 @@
 'use strict'
 
 import * as child_process from 'child_process'
-import { ConfigurationChangeEvent, ConfigurationTarget, WorkspaceConfiguration } from 'coc.nvim'
+import { Uri, ConfigurationChangeEvent, ConfigurationTarget, WorkspaceConfiguration } from 'coc.nvim'
 import path from 'path'
 import { DiagnosticSeverity, Disposable, Emitter, Event } from 'vscode-languageserver-protocol'
-import Uri from 'vscode-uri'
 import { IInterpreterAutoSeletionProxyService } from '../interpreter/autoSelection/types'
 import { IWorkspaceService } from './application/types'
 import { WorkspaceService } from './application/workspace'

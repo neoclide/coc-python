@@ -1,9 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-import { workspace } from 'coc.nvim'
+import { Uri, workspace } from 'coc.nvim'
 import { inject, injectable } from 'inversify'
-import Uri from 'vscode-uri'
 import { IInterpreterService, InterpreterType } from '../../interpreter/contracts'
 import { IServiceContainer } from '../../ioc/types'
 import { Product } from '../types'

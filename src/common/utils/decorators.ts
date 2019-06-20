@@ -4,8 +4,7 @@ import { isTestExecution } from '../constants'
 import { traceError, traceVerbose } from '../logger'
 import { Resource } from '../types'
 import { InMemoryInterpreterSpecificCache } from './cacheUtils'
-import { workspace } from 'coc.nvim'
-import Uri from 'vscode-uri'
+import { Uri, workspace } from 'coc.nvim'
 import { emptyFn } from '../function'
 
 // tslint:disable-next-line:no-require-imports no-var-requires

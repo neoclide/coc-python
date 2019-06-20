@@ -5,9 +5,8 @@
 
 import { injectable } from 'inversify'
 import { IDocumentManager } from './types'
-import { workspace } from 'coc.nvim'
+import { Uri, workspace } from 'coc.nvim'
 import { TextDocument, Event, Position, WorkspaceEdit } from 'vscode-languageserver-protocol'
-import Uri from 'vscode-uri'
 
 @injectable()
 export class DocumentManager implements IDocumentManager {

@@ -4,7 +4,7 @@
 'use strict'
 
 import { Commands } from '../constants'
-import Uri from 'vscode-uri'
+import { Uri } from 'coc.nvim'
 import { CancellationToken } from 'vscode-languageserver-protocol'
 
 export type CommandsWithoutArgs = keyof ICommandNameWithoutArgumentTypeMapping

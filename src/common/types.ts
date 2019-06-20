@@ -3,8 +3,7 @@
 'use strict'
 
 import { Socket } from 'net'
-import Uri from 'vscode-uri'
-import { ConfigurationTarget, DocumentSymbolProvider, Extension, ExtensionContext, OutputChannel } from 'coc.nvim'
+import { Uri, ConfigurationTarget, DocumentSymbolProvider, Extension, ExtensionContext, OutputChannel } from 'coc.nvim'
 import { DiagnosticSeverity, WorkspaceEdit, Disposable, Event } from 'vscode-languageserver-protocol'
 import { CommandsWithoutArgs } from './application/commands'
 import { EnvironmentVariables } from './variables/types'

@@ -2,8 +2,7 @@
 // Licensed under the MIT License.
 
 import { inject, injectable, named } from 'inversify'
-import { Terminal } from 'coc.nvim'
-import Uri from 'vscode-uri'
+import { Uri, Terminal } from 'coc.nvim'
 import { ICondaService, IInterpreterService, PythonInterpreter } from '../../interpreter/contracts'
 import { ITerminalManager, IWorkspaceService } from '../application/types'
 import { traceDecorators, traceError } from '../logger'

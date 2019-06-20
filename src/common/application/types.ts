@@ -3,8 +3,7 @@
 'use strict'
 import { ConfigurationChangeEvent, FileSystemWatcher, StatusBarItem, WorkspaceConfiguration } from 'coc.nvim'
 import { CancellationToken, Disposable, Event, Position, TextDocument, WorkspaceEdit, WorkspaceFolder } from 'vscode-languageserver-protocol'
-import Uri from 'vscode-uri'
-import { Terminal, TerminalOptions } from 'coc.nvim'
+import { Uri, Terminal, TerminalOptions } from 'coc.nvim'
 // import { IAsyncDisposable } from '../types'
 import { ICommandNameArgumentTypeMapping } from './commands'
 

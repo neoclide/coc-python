@@ -5,8 +5,7 @@
 
 // tslint:disable:no-any no-require-imports
 
-import Uri from 'vscode-uri'
-import { workspace } from 'coc.nvim'
+import { Uri, workspace } from 'coc.nvim'
 import { Resource } from '../types'
 
 interface CacheData {

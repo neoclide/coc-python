@@ -5,8 +5,7 @@
 
 import { inject, injectable } from 'inversify'
 import * as path from 'path'
-import { workspace } from 'coc.nvim'
-import Uri from 'vscode-uri'
+import { Uri, workspace } from 'coc.nvim'
 import { IServiceContainer } from '../../ioc/types'
 import { IWorkspaceService } from '../application/types'
 import { traceError } from '../logger'

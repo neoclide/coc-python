@@ -1,8 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
-import { Terminal } from 'coc.nvim'
+import { Uri, Terminal } from 'coc.nvim'
 import { Event } from 'vscode-languageserver-protocol'
-import Uri from 'vscode-uri'
 
 import { PythonInterpreter } from '../../interpreter/contracts'
 import { Resource } from '../types'

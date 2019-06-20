@@ -4,9 +4,8 @@
 import { injectable } from 'inversify'
 import { IWorkspaceService } from './types'
 import { WorkspaceFolder, Event, CancellationToken } from 'vscode-languageserver-protocol'
-import { ConfigurationChangeEvent, FileSystemWatcher, workspace, WorkspaceConfiguration } from 'coc.nvim'
+import { Uri, ConfigurationChangeEvent, FileSystemWatcher, workspace, WorkspaceConfiguration } from 'coc.nvim'
 import util from 'util'
-import Uri from 'vscode-uri'
 import glob from 'glob'
 import { Resource } from '../types'
 

@@ -3,7 +3,7 @@
 
 import { injectable } from 'inversify'
 import * as path from 'path'
-import Uri from 'vscode-uri'
+import { Uri } from 'coc.nvim'
 import { IServiceContainer } from '../../../ioc/types'
 import { IFileSystem } from '../../platform/types'
 import { IConfigurationService } from '../../types'

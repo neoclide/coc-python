@@ -5,7 +5,7 @@
 
 import * as path from 'path'
 import { EXTENSION_ROOT_DIR } from '../../constants'
-import Uri from 'vscode-uri'
+import { Uri } from 'coc.nvim'
 
 const darkIconsPath = path.join(EXTENSION_ROOT_DIR, 'resources', 'dark')
 const lightIconsPath = path.join(EXTENSION_ROOT_DIR, 'resources', 'light')

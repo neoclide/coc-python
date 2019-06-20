@@ -4,7 +4,7 @@
 'use strict'
 
 import { inject, injectable } from 'inversify'
-import Uri from 'vscode-uri'
+import { Uri } from 'coc.nvim'
 import { IServiceContainer } from '../../ioc/types'
 import { IEnvironmentVariablesProvider } from '../variables/types'
 import { ProcessService } from './proc'

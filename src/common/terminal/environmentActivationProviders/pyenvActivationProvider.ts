@@ -4,7 +4,7 @@
 'use strict'
 
 import { inject, injectable } from 'inversify'
-import Uri from 'vscode-uri'
+import { Uri } from 'coc.nvim'
 import { IInterpreterService, InterpreterType } from '../../../interpreter/contracts'
 import { IServiceContainer } from '../../../ioc/types'
 import { ITerminalActivationCommandProvider, TerminalShellType } from '../types'

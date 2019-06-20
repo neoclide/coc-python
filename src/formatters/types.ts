@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-import Uri from 'vscode-uri'
+import { Uri } from 'coc.nvim'
 import { ExecutionInfo, IFormattingSettings, Product } from '../common/types'
 
 export const IFormatterHelper = Symbol('IFormatterHelper')

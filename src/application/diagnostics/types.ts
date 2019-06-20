@@ -5,7 +5,7 @@
 
 import { DiagnosticSeverity } from 'vscode-languageserver-protocol'
 import { Resource } from '../../common/types'
-import Uri from 'vscode-uri'
+import { Uri } from 'coc.nvim'
 // import { PythonPathSource } from '../../debugger/extension/types'
 import { DiagnosticCodes } from './constants'
 

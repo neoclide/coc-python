@@ -8,7 +8,7 @@ import * as path from 'path'
 import { IWorkspaceService } from '../../common/application/types'
 import { traceDecorators } from '../../common/logger'
 import { IFileSystem } from '../../common/platform/types'
-import Uri from 'vscode-uri'
+import { Uri } from 'coc.nvim'
 import { IConfigurationService, Resource, IExtensionContext } from '../../common/types'
 import {
   ILanguageServerActivator,

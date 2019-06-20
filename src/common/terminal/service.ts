@@ -1,10 +1,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-import { Terminal } from 'coc.nvim'
+import { Uri, Terminal } from 'coc.nvim'
 import { inject, injectable } from 'inversify'
 import { Disposable, Emitter, Event } from 'vscode-languageserver-protocol'
-import Uri from 'vscode-uri'
 import { IServiceContainer } from '../../ioc/types'
 import { ITerminalManager } from '../application/types'
 import { IDisposableRegistry } from '../types'

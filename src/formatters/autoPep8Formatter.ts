@@ -3,7 +3,7 @@ import { IConfigurationService } from '../common/types'
 import { IServiceContainer } from '../ioc/types'
 import { BaseFormatter } from './baseFormatter'
 import { TextDocument, TextEdit, FormattingOptions, CancellationToken, Range } from 'vscode-languageserver-protocol'
-import Uri from 'vscode-uri'
+import { Uri } from 'coc.nvim'
 
 export class AutoPep8Formatter extends BaseFormatter {
   constructor(serviceContainer: IServiceContainer) {

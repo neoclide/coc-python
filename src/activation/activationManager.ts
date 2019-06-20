@@ -5,7 +5,7 @@
 
 import { inject, injectable, multiInject } from 'inversify'
 import { TextDocument } from 'vscode-languageserver-protocol'
-import { workspace } from 'coc.nvim'
+import { Uri, workspace } from 'coc.nvim'
 import { IApplicationDiagnostics } from '../application/types'
 import { IDocumentManager, IWorkspaceService } from '../common/application/types'
 import { PYTHON_LANGUAGE } from '../common/constants'
@@ -14,7 +14,6 @@ import { IDisposable, Resource } from '../common/types'
 import { IInterpreterAutoSelectionService } from '../interpreter/autoSelection/types'
 import { IInterpreterService } from '../interpreter/contracts'
 import { IExtensionActivationManager, IExtensionActivationService } from './types'
-import Uri from 'vscode-uri'
 import { emptyFn } from '../common/function'
 
 @injectable()

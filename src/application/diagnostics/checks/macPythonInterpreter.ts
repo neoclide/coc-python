@@ -4,9 +4,8 @@
 'use strict'
 
 import { inject, injectable } from 'inversify'
-import { ConfigurationChangeEvent, workspace } from 'coc.nvim'
+import { Uri, ConfigurationChangeEvent, workspace } from 'coc.nvim'
 import { DiagnosticSeverity } from 'vscode-languageserver-protocol'
-import Uri from 'vscode-uri'
 import { IWorkspaceService } from '../../../common/application/types'
 import { IPlatformService } from '../../../common/platform/types'
 import { IConfigurationService, IDisposableRegistry, Resource } from '../../../common/types'

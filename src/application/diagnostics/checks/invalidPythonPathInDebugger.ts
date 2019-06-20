@@ -3,10 +3,9 @@
 
 'use strict'
 
-import { workspace } from 'coc.nvim'
+import { Uri, workspace } from 'coc.nvim'
 import { inject, injectable, named } from 'inversify'
 import { DiagnosticSeverity } from 'vscode-languageserver-protocol'
-import Uri from 'vscode-uri'
 import { IDocumentManager } from '../../../common/application/types'
 import { IConfigurationService, Resource } from '../../../common/types'
 import { Diagnostics } from '../../../common/utils/localize'

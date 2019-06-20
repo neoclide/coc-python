@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-import Uri from 'vscode-uri'
+import { Uri } from 'coc.nvim'
 import { Event } from 'vscode-languageserver-protocol'
 
 export type EnvironmentVariables = Object & Record<string, string | undefined>

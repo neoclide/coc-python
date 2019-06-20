@@ -2,8 +2,7 @@
 // Licensed under the MIT License.
 
 import { inject, injectable } from 'inversify'
-import { ConfigurationTarget, workspace, WorkspaceConfiguration } from 'coc.nvim'
-import Uri from 'vscode-uri'
+import { Uri, ConfigurationTarget, workspace, WorkspaceConfiguration } from 'coc.nvim'
 import { IInterpreterAutoSeletionProxyService } from '../../interpreter/autoSelection/types'
 import { IServiceContainer } from '../../ioc/types'
 import { IWorkspaceService } from '../application/types'

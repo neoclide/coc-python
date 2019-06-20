@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import { inject, injectable } from 'inversify'
-import Uri from 'vscode-uri'
+import { Uri } from 'coc.nvim'
 import { IServiceContainer } from '../../ioc/types'
 import { IWorkspaceService } from '../application/types'
 import { IPythonExecutionFactory } from '../process/types'

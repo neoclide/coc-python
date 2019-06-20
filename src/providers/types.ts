@@ -6,7 +6,7 @@
 import {
   CancellationToken, WorkspaceEdit
 } from 'vscode-languageserver-protocol'
-import Uri from 'vscode-uri'
+import { Uri } from 'coc.nvim'
 
 export const ISortImportsEditingProvider = Symbol('ISortImportsEditingProvider')
 export interface ISortImportsEditingProvider {

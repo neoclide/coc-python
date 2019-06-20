@@ -8,10 +8,9 @@ import { IInstaller, IOutputChannel, Product, Resource } from '../common/types'
 import { IServiceContainer } from '../ioc/types'
 import { getTempFileWithDocumentContents, getTextEditsFromPatch } from './../common/editor'
 import { IFormatterHelper } from './types'
-import { OutputChannel, workspace } from 'coc.nvim'
+import { Uri, OutputChannel, workspace } from 'coc.nvim'
 import { TextDocument, FormattingOptions, Range, TextEdit } from 'vscode-languageserver-types'
 import { CancellationToken } from 'vscode-jsonrpc'
-import Uri from 'vscode-uri'
 import { emptyFn } from '../common/function'
 
 export abstract class BaseFormatter {

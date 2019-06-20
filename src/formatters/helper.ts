@@ -3,7 +3,7 @@
 
 import { inject, injectable } from 'inversify'
 import * as path from 'path'
-import Uri from 'vscode-uri'
+import { Uri } from 'coc.nvim'
 import { ExecutionInfo, IConfigurationService, IFormattingSettings, Product } from '../common/types'
 import { IServiceContainer } from '../ioc/types'
 import { FormatterId, FormatterSettingsPropertyNames, IFormatterHelper } from './types'

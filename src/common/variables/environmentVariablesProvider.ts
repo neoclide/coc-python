@@ -3,8 +3,7 @@
 
 import { inject, injectable } from 'inversify'
 import { Emitter, Disposable, Event } from 'vscode-languageserver-protocol'
-import Uri from 'vscode-uri'
-import { ConfigurationChangeEvent, FileSystemWatcher, workspace } from 'coc.nvim'
+import { Uri, ConfigurationChangeEvent, FileSystemWatcher, workspace } from 'coc.nvim'
 import { IWorkspaceService } from '../application/types'
 import { IPlatformService } from '../platform/types'
 import { IConfigurationService, ICurrentProcess, IDisposableRegistry } from '../types'
