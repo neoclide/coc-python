@@ -10,6 +10,8 @@ versions of the language: 2.7, >=3.5), including features such as linting,
 IntelliSense, code navigation, code formatting, refactoring, unit tests,
 snippets, and more!
 
+[关于 VS Code 中 python 的智障补全的解决方案，以 pytorch 为例](https://zhuanlan.zhihu.com/p/69317932)
+
 ## Install
 
 In your vim/neovim, run command:
