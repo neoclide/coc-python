@@ -2,3 +2,6 @@ src
 tsconfig.json
 tslint.json
 *.map
+.DS_Store
+.ignore
+pythonFiles/tests
