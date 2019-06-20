@@ -7,8 +7,7 @@ Basic working, but still **W.I.P**.
 
 Built with rich support for the Python language (for all actively supported
 versions of the language: 2.7, >=3.5), including features such as linting,
-IntelliSense, code navigation, code formatting, refactoring, unit tests,
-snippets, and more!
+IntelliSense, code navigation, code formatting, refactoring, snippets, and more!
 
 [关于 VS Code 中 python 的智障补全的解决方案，以 pytorch 为例](https://zhuanlan.zhihu.com/p/69317932)
 
@@ -19,9 +18,6 @@ In your vim/neovim, run command:
 ```
 :CocInstall coc-python
 ```
-
-**Note:** lastest master of [coc.nvim](https://github.com/neoclide/coc.nvim)
-required to make it work.
 
 ## Optional steps
 
