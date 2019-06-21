@@ -42,6 +42,8 @@ Open the Command List (use `:CocCommand` command in vim) and type in one of the 
 
 To see all available Python commands, open the Command Palette and type `Python`.
 
+**Note:** to enable multiple linters, edit the configuration file instead of use `python.setLinter` command.
+
 ## Features
 
 Except from `test`, `debug` and `datascience` features of [vscode-python](https://github.com/Microsoft/vscode-python).
