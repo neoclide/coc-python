@@ -22,6 +22,7 @@ In your vim/neovim, run command:
 ## Optional steps
 
 - To use Microsoft Python Language Server, add `"python.jediEnabled": false` in your settings file.
+- Checkout `:h coc-status` to have statusline integration with coc.nvim, so you can get download status.
 - When jedi is not enabled, Language server would be downloaded, make sure you have coc statusline integrated, checkout `:h coc-status`.
 - [Install a linter](https://code.visualstudio.com/docs/python/linting) to get errors and warnings -- you can further customize linting rules to fit your needs.
 - Select your preferred Python interpreter/version/environment using the `Select Interpreter` command.
