@@ -21,7 +21,7 @@ In your vim/neovim, run command:
 
 ## Get start
 
-- To use Microsoft Python Language Server, add `"python.jediEnabled": false` in your settings file.
+- To use Microsoft Python Language Server, add `"python.jediEnabled": false` in your settings file, coc-python would download latest stable MPLS for you.
 - Checkout `:h coc-status` to have statusline integration with coc.nvim, so you can get download status.
 - When jedi is not enabled, Language server would be downloaded, make sure you have coc statusline integrated, checkout `:h coc-status`.
 - [Install a linter](https://code.visualstudio.com/docs/python/linting) to get errors and warnings -- you can further customize linting rules to fit your needs.
@@ -39,7 +39,7 @@ Open the Command List (use `:CocCommand` command in vim) and type in one of the 
 | `python.startREPL`                   | Start an interactive Python REPL using the selected interpreter in the VS Code terminal. |
 | `python.execInTerminal`              | Runs the active Python file in the VS Code terminal.                                     |
 | `python.setLinter`                   | Switch from PyLint to flake8 or other supported linters.                                 |
-| `python.upgradePythonLanguageServer` | Upgrade MPLS to latest stable version.                                                   |
+| `python.upgradePythonLanguageServer` | Upgrade MPLS to latest daily version.                                                    |
 
 To see all available Python commands, open the Command Palette and type `Python`.
 
