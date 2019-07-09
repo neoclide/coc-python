@@ -70,6 +70,7 @@ export class LanguageServerSurveyBanner implements IPythonExtensionBanner {
     const launchCounter: number = await this.incrementPythonLanguageServiceLaunchCounter()
     const show = await this.shouldShowBanner(launchCounter)
     if (!show) {
+      this.disabledInCurrentSession = true
       return
     }
     await this.disable()

@@ -84,6 +84,8 @@ export class ProposeLanguageServerBanner implements IPythonExtensionBanner {
     if (response) {
       await this.enableNewLanguageServer()
       await this.disable()
+    } else {
+      this.disabledInCurrentSession = true
     }
   }
 
