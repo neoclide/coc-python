@@ -1,4 +1,4 @@
-import { Disposable, StatusBarItem, Uri } from 'coc.nvim'
+import { Disposable, workspace, events, StatusBarItem, Uri } from 'coc.nvim'
 import { inject, injectable } from 'inversify'
 import { IApplicationShell, IWorkspaceService } from '../../common/application/types'
 import { IDisposableRegistry, Resource } from '../../common/types'
@@ -33,7 +33,18 @@ export class InterpreterDisplay implements IInterpreterDisplay {
     disposableRegistry.push(this.statusBar)
 
     this.interpreterService.onDidChangeInterpreterInformation(this.onDidChangeInterpreterInformation, this, disposableRegistry)
+    events.on('BufEnter', this.onBufEnter, this, disposableRegistry)
   }
+
+  private async onBufEnter(bufnr: number): Promise<void> {
+    let filetype = await workspace.nvim.call('getbufvar', [bufnr, '&filetype', ''])
+    if (filetype == 'python') {
+      this.statusBar.show()
+    } else {
+      this.statusBar.hide()
+    }
+  }
+
   public async refresh(resource?: Uri): Promise<void> {
     // Use the workspace Uri if available
     if (resource && this.workspaceService.getWorkspaceFolder(resource)) {
