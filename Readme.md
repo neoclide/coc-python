@@ -90,7 +90,7 @@ Except from `test`, `debug` and `datascience` features of [vscode-python](https:
 - `python.formatting.yapfArgs`:Arguments passed in. Each argument is a separate item in the array., default: `[]`
 - `python.formatting.yapfPath`:Path to yapf, you can use a custom version of yapf by modifying this setting to include the full path., default: `"yapf"`
 - `python.globalModuleInstallation`:Whether to install Python modules globally when not using an environment., default: `false`
-- `python.jediEnabled`:Enables Jedi as IntelliSense engine instead of Microsoft Python Analysis Engine., default: `false`
+- `python.jediEnabled`:Enables Jedi as IntelliSense engine instead of Microsoft Python Analysis Engine., default: `true`
 - `python.jediMemoryLimit`:Memory limit for the Jedi completion engine in megabytes. Zero (default) means 1024 MB. -1 means unlimited (disable memory limit check), default: `0`
 - `python.jediPath`:Path to directory containing the Jedi library (this path will contain the 'Jedi' sub directory)., default: `""`
 - `python.analysis.diagnosticEnabled`: Enable diagnostic support of language server, default: `true`
