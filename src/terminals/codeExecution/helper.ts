@@ -50,7 +50,7 @@ export class CodeExecutionHelper implements ICodeExecutionHelper {
   public async getSelectedTextToExecute(mode: string): Promise<string | undefined> {
     let doc = workspace.getDocument(workspace.bufnr)
     if (!doc) return
-    let range = await workspace.getSelectedRange(mode, doc.textDocument)
+    let range = await workspace.getSelectedRange(mode, doc)
     if (range) return doc.textDocument.getText(range)
   }
 }

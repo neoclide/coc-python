@@ -72,14 +72,14 @@ export function activateSimplePythonRefactorProvider(context: ExtensionContext, 
 export function extractVariable(extensionDir: string, textEditor: Document, range: Range,
   // tslint:disable-next-line:no-any
   outputChannel: OutputChannel, serviceContainer: IServiceContainer): Promise<any> {
+  let workspaceFolder = workspace.getWorkspaceFolder(textEditor.uri)
+  let workspaceRoot = workspaceFolder ? Uri.parse(workspaceFolder.uri).fsPath : workspace.cwd
 
-  // const workspaceRoot = workspace.rootPath
-  const config = workspace.getConfiguration('', textEditor.uri)
-  const pythonSettings = config.get<IPythonSettings>('python')
+  const pythonSettings = serviceContainer.get<IConfigurationService>(IConfigurationService).getSettings(Uri.file(workspaceRoot))
 
   return validateDocumentForRefactor(textEditor).then(() => {
     const newName = `newvariable${new Date().getMilliseconds().toString()}`
-    const proxy = new RefactorProxy(extensionDir, pythonSettings, Uri.file(workspace.rootPath).toString(), serviceContainer)
+    const proxy = new RefactorProxy(extensionDir, pythonSettings, workspaceRoot, serviceContainer)
     const rename = proxy.extractVariable<RenameResponse>(textEditor.textDocument, newName, Uri.parse(textEditor.uri).fsPath, range).then(response => {
       return response.results[0].diff
     })
@@ -92,9 +92,10 @@ export function extractVariable(extensionDir: string, textEditor: Document, rang
 export function extractMethod(extensionDir: string, textEditor: Document, range: Range,
   // tslint:disable-next-line:no-any
   outputChannel: OutputChannel, serviceContainer: IServiceContainer): Promise<any> {
+  let workspaceFolder = workspace.getWorkspaceFolder(textEditor.uri)
+  let workspaceRoot = workspaceFolder ? Uri.parse(workspaceFolder.uri).fsPath : workspace.cwd
 
-  const workspaceRoot = workspace.rootPath
-  const pythonSettings = serviceContainer.get<IConfigurationService>(IConfigurationService).getSettings(Uri.parse(workspaceRoot))
+  const pythonSettings = serviceContainer.get<IConfigurationService>(IConfigurationService).getSettings(Uri.file(workspaceRoot))
 
   return validateDocumentForRefactor(textEditor).then(() => {
     const newName = `newmethod${new Date().getMilliseconds().toString()}`

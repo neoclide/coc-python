@@ -18,7 +18,7 @@
     "mpls"
   ],
   "engines": {
-    "coc": ">= 0.0.65"
+    "coc": ">= 0.0.73"
   },
   "scripts": {
     "clean": "rimraf lib",
@@ -873,7 +873,7 @@
     "@types/winreg": "^1.2.30",
     "arch": "^2.1.1",
     "azure-storage": "^2.10.3",
-    "coc.nvim": "^0.0.71",
+    "coc.nvim": "^0.0.73",
     "diff-match-patch": "^1.0.4",
     "fs-extra": "^7.0.1",
     "fuzzy": "^0.1.3",

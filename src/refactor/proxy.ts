@@ -103,7 +103,7 @@ export class RefactorProxy implements Disposable {
   private async initialize(): Promise<void> {
     const pythonProc = await this.serviceContainer.get<IPythonExecutionFactory>(IPythonExecutionFactory).create({ resource: Uri.file(this.workspaceRoot) })
     this.initialized = createDeferred<void>()
-    const args = ['refactor.py', Uri.parse(this.workspaceRoot).fsPath]
+    const args = ['refactor.py', this.workspaceRoot]
     const cwd = path.join(this._extensionDir, 'pythonFiles')
     const result = pythonProc.execObservable(args, { cwd })
     this._process = result.proc
