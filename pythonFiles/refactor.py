@@ -22,7 +22,7 @@ except:
     sys.stderr.flush()
 
 WORKSPACE_ROOT = sys.argv[1]
-ROPE_PROJECT_FOLDER = '.vscode/.ropeproject'
+ROPE_PROJECT_FOLDER = '.vim/.ropeproject'
 
 
 class RefactorProgress():
