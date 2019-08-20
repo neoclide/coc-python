@@ -23,7 +23,7 @@ In your vim/neovim, run command:
 
 - To use Microsoft Python Language Server, add `"python.jediEnabled": false` in your settings file, coc-python would download latest stable MPLS for you.
 - Checkout `:h coc-status` to have statusline integration with coc.nvim, so you can get download status.
-- When jedi is not enabled, Language server would be downloaded, make sure you have coc statusline integrated, checkout `:h coc-status`.
+- When jedi is not enabled, the language server will be downloaded. Make sure you have coc statusline integrated, check out `:h coc-status`.
 - [Install a linter](https://code.visualstudio.com/docs/python/linting) to get errors and warnings -- you can further customize linting rules to fit your needs.
 - Select your preferred Python interpreter/version/environment using the `python.setInterpreter` command.
   - **Note** the autoselected python interpreter could be wrong, make sure select the right one for you.
@@ -160,7 +160,7 @@ Except from `test`, `debug` and `datascience` features of [vscode-python](https:
 - `python.workspaceSymbols.exclusionPatterns`:Pattern used to exclude files and folders from ctags See http://ctags.sourceforge.net/ctags.html., default: `["**/site-packages/**"]`
 - `python.workspaceSymbols.rebuildOnFileSave`:Whether to re-build the tags file on when changes made to python files are saved., default: `true`
 - `python.workspaceSymbols.rebuildOnStart`:Whether to re-build the tags file on start (defaults to true)., default: `true`
-- `python.workspaceSymbols.tagFilePath`:Fully qualified path to tag file (exuberant ctag file), used to provide workspace symbols., default: `"${workspaceFolder}/.vscode/tags"`
+- `python.workspaceSymbols.tagFilePath`:Fully qualified path to tag file (exuberant ctags file), used to provide workspace symbols., default: `"${workspaceFolder}/.vscode/tags"`
 
 ## F.A.Q
 
