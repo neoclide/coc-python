@@ -1,7 +1,8 @@
 # coc-python
 
 Python extension for [coc.nvim](https://github.com/neoclide/coc.nvim), fork of
-[vscode-python](https://github.com/Microsoft/vscode-python).
+[vscode-python](https://github.com/Microsoft/vscode-python) from commit
+[16899f6b13477786212f29eb3cb7a459b5ebf0a4](https://github.com/microsoft/vscode-python/commit/16899f6b13477786212f29eb3cb7a459b5ebf0a4).
 
 Basic working, but still **W.I.P**.
 
