@@ -17,7 +17,7 @@ import { emptyFn } from '../common/function'
 // tslint:disable-next-line:no-require-imports no-var-requires no-any
 const namedRegexp = require('named-js-regexp')
 // Allow negative column numbers (https://github.com/PyCQA/pylint/issues/1822)
-const REGEX = '(?<line>\\d+),(?<column>-?\\d+),(?<type>\\w+),(?<code>\\w\\d+):(?<message>.*)\\r?(\\n|$)'
+const REGEX = '(?<line>\\d+),(?<column>-?\\d+),(?<type>\\w+),(?<code>\\w+\\d+):(?<message>.*)\\r?(\\n|$)'
 
 export interface IRegexGroup {
   line: number
