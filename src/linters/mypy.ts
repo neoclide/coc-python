@@ -5,11 +5,13 @@ import { IServiceContainer } from '../ioc/types'
 import { BaseLinter } from './baseLinter'
 import { ILintMessage } from './types'
 
+const COLUMN_OFF_SET = 1
+
 export const REGEX = '(?<file>[^:]+):(?<line>\\d+)(:(?<column>\\d+))?: (?<type>\\w+): (?<message>.*)\\r?(\\n|$)'
 
 export class MyPy extends BaseLinter {
   constructor(outputChannel: OutputChannel, serviceContainer: IServiceContainer) {
-    super(Product.mypy, outputChannel, serviceContainer)
+    super(Product.mypy, outputChannel, serviceContainer, COLUMN_OFF_SET)
   }
 
   protected async runLinter(document: TextDocument, cancellation: CancellationToken): Promise<ILintMessage[]> {
