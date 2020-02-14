@@ -561,7 +561,7 @@ class JediCompletion(object):
 
         if lookup == 'names':
             return self._serialize_definitions(
-                jedi.api.names(
+                jedi.api.get_names(
                     source=request.get('source', None),
                     path=request.get('path', ''),
                     all_scopes=True,
