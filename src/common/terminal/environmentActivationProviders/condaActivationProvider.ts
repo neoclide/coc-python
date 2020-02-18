@@ -11,6 +11,7 @@ import { IPlatformService } from '../../platform/types'
 import { IConfigurationService } from '../../types'
 import { ITerminalActivationCommandProvider, TerminalShellType } from '../types'
 import { fileToCommandArgument, toCommandArgument } from '../../string'
+import { ITerminalActivator, ITerminalHelper, TerminalShellType } from '../types'
 
 // Version number of conda that requires we call activate with 'conda activate' instead of just 'activate'
 const CondaRequiredMajor = 4
@@ -26,6 +27,7 @@ export class CondaActivationCommandProvider implements ITerminalActivationComman
     @inject(IPlatformService) private platform: IPlatformService,
     @inject(IConfigurationService) private configService: IConfigurationService
   ) { }
+  constructor(private readonly helper: ITerminalHelper) { }
 
   /**
    * Is the given shell supported for activating a conda env?
@@ -62,7 +64,8 @@ export class CondaActivationCommandProvider implements ITerminalActivationComman
       const interpreterPath = await this.condaService.getCondaFileFromInterpreter(pythonPath, envInfo.name)
       if (interpreterPath) {
         const activatePath = fileToCommandArgument(path.join(path.dirname(interpreterPath), 'activate'))
-        if (_targetShell === TerminalShellType.fish) {
+        const shell = this.helper.identifyTerminalShell(this.helper.getTerminalShellPath())
+        if (shell === TerminalShellType.fish) {
           const firstActivate = this.platform.isWindows ? activatePath : ``
         } else {
           const firstActivate = this.platform.isWindows ? activatePath : `source ${activatePath}`
