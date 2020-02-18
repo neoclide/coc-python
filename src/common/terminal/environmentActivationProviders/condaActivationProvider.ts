@@ -62,13 +62,12 @@ export class CondaActivationCommandProvider implements ITerminalActivationComman
       const interpreterPath = await this.condaService.getCondaFileFromInterpreter(pythonPath, envInfo.name)
       if (interpreterPath) {
         const activatePath = fileToCommandArgument(path.join(path.dirname(interpreterPath), 'activate'))
-        const firstActivate = this.platform.isWindows ?
-          activatePath :
-          ``
-        return [
-          firstActivate,
-          `conda activate ${toCommandArgument(envInfo.name)}`
-        ]
+        if (_targetShell === TerminalShellType.fish) {
+          const firstActivate = this.platform.isWindows ? activatePath : ``
+        } else {
+          const firstActivate = this.platform.isWindows ? activatePath : `source ${activatePath}`
+        }
+        return [ firstActivate, `conda activate ${toCommandArgument(envInfo.name)}` ]
       }
     }
 
