@@ -52,8 +52,11 @@ export class CompletionSource {
     const document = doc.textDocument
     const position = documentPosition.position
     const wordRange = doc.getWordRangeAtPosition(position)
+    if (position == null) {
+      return
+    }
 
-    const leadingRange = wordRange !== undefined
+    const leadingRange = wordRange != null
       ? Range.create(Position.create(0, 0), wordRange.start)
       : Range.create(Position.create(0, 0), position)
 
