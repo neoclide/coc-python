@@ -24,9 +24,9 @@ export class CondaActivationCommandProvider implements ITerminalActivationComman
   constructor(
     @inject(ICondaService) private readonly condaService: ICondaService,
     @inject(IPlatformService) private platform: IPlatformService,
-    @inject(IConfigurationService) private configService: IConfigurationService
+    @inject(IConfigurationService) private configService: IConfigurationService,
+    @inject(ITerminalHelper) private readonly helper: ITerminalHelper
   ) { }
-  constructor(private readonly helper: ITerminalHelper) { }
 
   /**
    * Is the given shell supported for activating a conda env?
