@@ -9,7 +9,7 @@ import { Uri } from 'coc.nvim'
 import { ICondaService } from '../../../interpreter/contracts'
 import { IPlatformService } from '../../platform/types'
 import { IConfigurationService } from '../../types'
-import { ITerminalActivationCommandProvider, ITerminalHelper, TerminalShellType } from '../types'
+import { ITerminalActivationCommandProvider, TerminalShellType } from '../types'
 import { fileToCommandArgument, toCommandArgument } from '../../string'
 
 // Version number of conda that requires we call activate with 'conda activate' instead of just 'activate'
@@ -25,7 +25,6 @@ export class CondaActivationCommandProvider implements ITerminalActivationComman
     @inject(ICondaService) private readonly condaService: ICondaService,
     @inject(IPlatformService) private platform: IPlatformService,
     @inject(IConfigurationService) private configService: IConfigurationService,
-    @inject(ITerminalHelper) private readonly helper: ITerminalHelper
   ) { }
 
   /**
@@ -63,10 +62,9 @@ export class CondaActivationCommandProvider implements ITerminalActivationComman
       const interpreterPath = await this.condaService.getCondaFileFromInterpreter(pythonPath, envInfo.name)
       if (interpreterPath) {
         const activatePath = fileToCommandArgument(path.join(path.dirname(interpreterPath), 'activate'))
-        const shell = this.helper.identifyTerminalShell(this.helper.getTerminalShellPath())
-        let activate_path: string = shell === TerminalShellType.fish ? '' : 'source ${activatePath}'
+        let activate_path: string = targetShell
         const firstActivate = this.platform.isWindows ? activatePath : activate_path
-        return [ firstActivate, `conda activate ${toCommandArgument(envInfo.name)}` ]
+        return [firstActivate, `conda activate ${toCommandArgument(envInfo.name)}`]
       }
     }
 
