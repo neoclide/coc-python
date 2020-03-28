@@ -28,7 +28,7 @@ const getEnvironmentTimeout = 30000
 // The shell under which we'll execute activation scripts.
 const defaultShells = {
   [OSType.Windows]: 'cmd',
-  [OSType.OSX]: 'bash',
+  [OSType.OSX]: 'zsh',
   [OSType.Linux]: 'bash',
   [OSType.Unknown]: undefined
 }
