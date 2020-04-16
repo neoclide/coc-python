@@ -3,7 +3,7 @@
 
 'use strict'
 
-import { inject, injectable } from 'inversify'
+import { injectable } from 'inversify'
 import requestTypes from 'request'
 import { IHttpClient } from '../../activation/types'
 import { workspace } from 'coc.nvim'
@@ -12,7 +12,13 @@ import { workspace } from 'coc.nvim'
 export class HttpClient implements IHttpClient {
   public readonly requestOptions: requestTypes.CoreOptions
   constructor() {
-    this.requestOptions = { proxy: workspace.getConfiguration('http').get('proxy', '') }
+    this.requestOptions = {
+      proxy: workspace.getConfiguration('http').get('proxy')
+      || process.env.http_proxy
+      || process.env.HTTP_PROXY
+      || process.env.https_proxy
+      || process.env.HTTPS_PROXY
+    }
   }
 
   public async downloadFile(uri: string): Promise<requestTypes.Request> {
