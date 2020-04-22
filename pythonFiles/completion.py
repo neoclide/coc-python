@@ -571,7 +571,8 @@ class JediCompletion(object):
         script = jedi.Script(
             source=request.get('source', None), line=request['line'] + 1,
             column=request['column'], path=request.get('path', ''),
-            sys_path=sys.path, environment=self.environment)
+            project=jedi.Project(request.get('path', ''), sys_path=sys.path),
+            environment=self.environment)
 
         if lookup == 'definitions':
             defs = self._get_definitionsx(script.goto_assignments(follow_imports=True), request['id'])
