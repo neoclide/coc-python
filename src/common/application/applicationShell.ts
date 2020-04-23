@@ -35,6 +35,8 @@ export class ApplicationShell implements IApplicationShell {
       if (arg && typeof arg.then == 'function') {
         arg.then(() => {
           this.statusItem.hide()
+        }, () => {
+          this.statusItem.hide()
         })
       }
     }

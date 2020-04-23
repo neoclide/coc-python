@@ -94,7 +94,7 @@ class JediCompletion(object):
             completion.name,
             ', '.join(p.description[6:] for p in completion.params if p))
 
-    def _get_call_signatures(self, script):
+    def _get_call_signatures(self, script, line, column):
         """Extract call signatures from jedi.api.Script object in failsafe way.
 
         Returns:
@@ -102,7 +102,7 @@ class JediCompletion(object):
         """
         _signatures = []
         try:
-            call_signatures = script.call_signatures()
+            call_signatures = script.get_signatures(line, column)
         except KeyError:
             call_signatures = []
         except :
@@ -133,7 +133,7 @@ class JediCompletion(object):
             return pair[1]
         return None
 
-    def _get_call_signatures_with_args(self, script):
+    def _get_call_signatures_with_args(self, script, line, column):
         """Extract call signatures from jedi.api.Script object in failsafe way.
 
         Returns:
@@ -141,7 +141,7 @@ class JediCompletion(object):
         """
         _signatures = []
         try:
-            call_signatures = script.call_signatures()
+            call_signatures = script.get_signatures(line, column)
         except KeyError:
             call_signatures = []
         for signature in call_signatures:
@@ -178,7 +178,7 @@ class JediCompletion(object):
                 sig["params"].append({"name": name, "value": value, "docstring": paramDocstring, "description": param.description})
         return _signatures
 
-    def _serialize_completions(self, script, identifier=None, prefix=''):
+    def _serialize_completions(self, script, line, column, identifier=None, prefix=''):
         """Serialize response to be read from VSCode.
 
         Args:
@@ -192,7 +192,7 @@ class JediCompletion(object):
         """
         _completions = []
 
-        for signature, name, value in self._get_call_signatures(script):
+        for signature, name, value in self._get_call_signatures(script, line, column):
             if not self.fuzzy_matcher and not name.lower().startswith(
                     prefix.lower()):
                 continue
@@ -215,7 +215,7 @@ class JediCompletion(object):
             _completions.append(_completion)
 
         try:
-            completions = script.completions()
+            completions = script.complete(line, column)
         except KeyError:
             completions = []
         except :
@@ -243,10 +243,10 @@ class JediCompletion(object):
             _completions.append(_completion)
         return json.dumps({'id': identifier, 'results': _completions})
 
-    def _serialize_methods(self, script, identifier=None, prefix=''):
+    def _serialize_methods(self, script, line, column, identifier=None, prefix=''):
         _methods = []
         try:
-            completions = script.completions()
+            completions = script.complete(line, column)
         except KeyError:
             return []
 
@@ -274,7 +274,7 @@ class JediCompletion(object):
               })
         return json.dumps({'id': identifier, 'results': _methods})
 
-    def _serialize_arguments(self, script, identifier=None):
+    def _serialize_arguments(self, script, line, column, identifier=None):
         """Serialize response to be read from VSCode.
 
         Args:
@@ -284,7 +284,7 @@ class JediCompletion(object):
         Returns:
             Serialized string to send to VSCode.
         """
-        return json.dumps({"id": identifier, "results": self._get_call_signatures_with_args(script)})
+        return json.dumps({"id": identifier, "results": self._get_call_signatures_with_args(script, line, column)})
 
     def _top_definition(self, definition):
         for d in definition.goto_assignments():
@@ -561,52 +561,54 @@ class JediCompletion(object):
 
         if lookup == 'names':
             return self._serialize_definitions(
-                jedi.api.names(
-                    source=request.get('source', None),
+                jedi.Script(
+                    code=request.get('source', None),
                     path=request.get('path', ''),
-                    all_scopes=True,
-                    environment=self.environment),
+                    project=jedi.get_default_project(os.path.dirname(path)),
+                    environment=self.environment).get_names(all_scopes=True),
                 request['id'])
 
+        line = request['line'] + 1
+        column = request['column']
         script = jedi.Script(
-            source=request.get('source', None), line=request['line'] + 1,
-            column=request['column'], path=request.get('path', ''),
-            project=jedi.Project(request.get('path', ''), sys_path=sys.path),
+            code=request.get('source', None),
+            path=request.get('path', ''),
+            project=jedi.get_default_project(os.path.dirname(path)),
             environment=self.environment)
 
         if lookup == 'definitions':
-            defs = self._get_definitionsx(script.goto_assignments(follow_imports=True), request['id'])
+            defs = self._get_definitionsx(script.goto(line, column, follow_imports=True), request['id'])
             return json.dumps({'id': request['id'], 'results': defs})
         if lookup == 'tooltip':
             if jediPreview:
                 defs = []
                 try:
-                    defs = self._get_definitionsx(script.goto_definitions(), request['id'], True)
+                    defs = self._get_definitionsx(script.infer(line, column), request['id'], True)
                 except:
                     pass
                 try:
                     if len(defs) == 0:
-                        defs = self._get_definitionsx(script.goto_assignments(), request['id'], True)
+                        defs = self._get_definitionsx(script.goto(line, column), request['id'], True)
                 except:
                     pass
                 return json.dumps({'id': request['id'], 'results': defs})
             else:
                 try:
-                    return self._serialize_tooltip(script.goto_definitions(), request['id'])
+                    return self._serialize_tooltip(script.infer(line, column), request['id'])
                 except:
                     return json.dumps({'id': request['id'], 'results': []})
         elif lookup == 'arguments':
             return self._serialize_arguments(
-                script, request['id'])
+                script, line, column, request['id'])
         elif lookup == 'usages':
             return self._serialize_usages(
-                script.usages(), request['id'])
+                script.get_references(line, column), request['id'])
         elif lookup == 'methods':
-          return self._serialize_methods(script, request['id'],
-                                      request.get('prefix', ''))
+          return self._serialize_methods(script, line, column,
+                                    request['id'], request.get('prefix', ''))
         else:
-            return self._serialize_completions(script, request['id'],
-                                            request.get('prefix', ''))
+            return self._serialize_completions(script, line, column,
+                                     request['id'], request.get('prefix', ''))
 
     def _write_response(self, response):
         sys.stdout.write(response + '\n')
@@ -647,8 +649,8 @@ if __name__ == '__main__':
     sys.path.insert(0, jediPath)
     import jedi
     digits = jedi.__version__.split('.')
-    if int(digits[0]) == 0 and int(digits[1]) <= 11:
-         raise RuntimeError('Jedi version %s too old, requires >= 0.13.0' % (jedi.__version__))
+    if int(digits[0]) == 0 and int(digits[1]) < 17:
+         raise RuntimeError('Jedi version %s too old, requires >= 0.17.0' % (jedi.__version__))
     if jediPreview:
         jedi.settings.cache_directory = os.path.join(
             jedi.settings.cache_directory, cachePrefix + jedi.__version__.replace('.', ''))
