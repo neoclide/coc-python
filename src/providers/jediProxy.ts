@@ -339,7 +339,7 @@ export class JediProxy implements Disposable {
     this.proc = undefined
   }
 
-  private handleError(source: string, errorMessage: string) {
+  private handleError(source: string, errorMessage: string): void {
     Logger.error(`${source} jediProxy`, `Error (${source}) ${errorMessage}`)
     workspace.showMessage(`Jedi error: ${errorMessage}`, 'error')
   }
@@ -378,6 +378,8 @@ export class JediProxy implements Disposable {
             }
             this.handleError('spawnProcess', ex)
           })
+      } else {
+        this.proc = null
       }
     })
     result.out.subscribe(output => {
