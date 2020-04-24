@@ -694,7 +694,7 @@ if __name__ == "__main__":
     import jedi
 
     digits = jedi.__version__.split(".")
-    if int(digits[0]) == 0 and int(digits[1]) < 18:
+    if int(digits[0]) == 0 and int(digits[1]) < 17:
         raise RuntimeError("Jedi version %s too old, requires >= 0.17.0" % (jedi.__version__))
     else:
         if jediPreview:
