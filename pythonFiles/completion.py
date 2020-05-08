@@ -586,13 +586,15 @@ class JediCompletion(object):
         if len(path) > 0 and path not in sys.path:
             sys.path.insert(0, path)
         lookup = request.get("lookup", "completions")
+        
+        project = jedi.Project(os.path.dirname(path), sys_path=sys.path)
 
         if lookup == "names":
             return self._serialize_definitions(
                 jedi.Script(
                     code=request.get("source", None),
                     path=request.get("path", ""),
-                    project=jedi.get_default_project(os.path.dirname(path)),
+                    project=project,
                     environment=self.environment,
                 ).get_names(all_scopes=True),
                 request["id"],
@@ -603,7 +605,7 @@ class JediCompletion(object):
         script = jedi.Script(
             code=request.get("source", None),
             path=request.get("path", ""),
-            project=jedi.get_default_project(os.path.dirname(path)),
+            project=project,
             environment=self.environment,
         )
 
