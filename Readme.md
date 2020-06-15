@@ -93,7 +93,7 @@ Except from `test`, `debug` and `datascience` features of [vscode-python](https:
 - `python.globalModuleInstallation`:Whether to install Python modules globally when not using an environment., default: `false`
 - `python.jediEnabled`:Enables Jedi as IntelliSense engine instead of Microsoft Python Analysis Engine., default: `true`
 - `python.jediMemoryLimit`:Memory limit for the Jedi completion engine in megabytes. Zero (default) means 1024 MB. -1 means unlimited (disable memory limit check), default: `0`
-- `python.jediPath`:Path to directory containing the Jedi library (this path will contain the 'Jedi' sub directory)., default: `""`
+- `python.jediPath`:Path to directory containing the Jedi library (this path will contain the `jedi` sub directory)., default: `""`
 - `python.analysis.diagnosticEnabled`: Enable diagnostic support of language server, default: `true`
 - `python.analysis.openFilesOnly`:Only show errors and warnings for open files rather than for the entire workspace., default: `true`
 - `python.analysis.diagnosticPublishDelay`:Delay before diagnostic messages are transferred to the problems list (in milliseconds)., default: `1000`
