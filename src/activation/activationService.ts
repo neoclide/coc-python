@@ -123,7 +123,7 @@ export class LanguageServerExtensionActivationService implements IExtensionActiv
     if (this.currentActivator && this.currentActivator.jedi === jedi) {
       return
     }
-    const reload = await workspace.showPrompt(`Reload coc server to switching between language engines?`)
+    const reload = await workspace.showPrompt(`Reload coc server to switch between language engines?`)
     if (reload) {
       workspace.nvim.command(`CocRestart`, true)
     }
