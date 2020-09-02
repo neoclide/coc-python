@@ -181,6 +181,12 @@
           "description": "Automatically update the language server.",
           "scope": "application"
         },
+        "python.hideInterpreterName": {
+          "type": "boolean",
+          "default": false,
+          "description": "Hide interpreter name in status bar.",
+          "scope": "application"
+        },
         "python.disableInstallationCheck": {
           "type": "boolean",
           "default": false,

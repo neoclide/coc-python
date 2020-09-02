@@ -43,6 +43,7 @@ export class PythonSettings implements IPythonSettings {
   public analysis!: IAnalysisSettings
   public autoUpdateLanguageServer = true
   public datascience!: IDataScienceSettings
+  public hideInterpreterName = false
 
   protected readonly changed = new Emitter<void>()
   private workspaceRoot: Uri
@@ -147,6 +148,7 @@ export class PythonSettings implements IPythonSettings {
     this.downloadLanguageServer = systemVariables.resolveAny(pythonSettings.get<boolean>('downloadLanguageServer', true))!
     this.jediEnabled = systemVariables.resolveAny(pythonSettings.get<boolean>('jediEnabled', true))!
     this.autoUpdateLanguageServer = systemVariables.resolveAny(pythonSettings.get<boolean>('autoUpdateLanguageServer', true))!
+    this.hideInterpreterName = systemVariables.resolveAny(pythonSettings.get<boolean>('hideInterpreterName', false))!
     if (this.jediEnabled) {
       // tslint:disable-next-line:no-backbone-get-set-outside-model no-non-null-assertion
       this.jediPath = systemVariables.resolveAny(pythonSettings.get<string>('jediPath'))!

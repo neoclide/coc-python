@@ -80,6 +80,7 @@ Except from `test`, `debug` and `datascience` features of [vscode-python](https:
 - `python.autoComplete.showAdvancedMembers`:Controls appearance of methods with double underscores in the completion list., default: `true`
 - `python.autoComplete.typeshedPaths`:Specifies paths to local typeshed repository clone(s) for the Python language server., default: `[]`
 - `python.autoUpdateLanguageServer`:Automatically update the language server., default: `true`
+- `python.hideInterpreterName`:Hide Python interpreter name in status bar., default: `false`
 - `python.disableInstallationCheck`:Whether to check if Python is installed (also warn when using the macOS-installed Python)., default: `false`
 - `python.envFile`:Absolute path to a file containing environment variable definitions., default: `"${workspaceFolder}/.env"`
 - `python.trace.server`:Trace level of tsserver, default: `"off"`

@@ -163,6 +163,7 @@ export interface IPythonSettings {
   readonly globalModuleInstallation: boolean
   readonly analysis: IAnalysisSettings
   readonly autoUpdateLanguageServer: boolean
+  readonly hideInterpreterName: boolean
   readonly datascience: IDataScienceSettings
   readonly onDidChange: Event<void>
 }

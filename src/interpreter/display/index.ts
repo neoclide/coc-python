@@ -5,6 +5,7 @@ import { IDisposableRegistry, Resource } from '../../common/types'
 import { IServiceContainer } from '../../ioc/types'
 import { IInterpreterAutoSelectionService } from '../autoSelection/types'
 import { IInterpreterDisplay, IInterpreterHelper, IInterpreterService, PythonInterpreter } from '../contracts'
+import { IConfigurationService } from '../../common/types'
 import { emptyFn } from '../../common/function'
 
 // tslint:disable-next-line:completed-docs
@@ -16,6 +17,7 @@ export class InterpreterDisplay implements IInterpreterDisplay {
   private readonly interpreterService: IInterpreterService
   private currentlySelectedInterpreterPath?: string
   private currentlySelectedWorkspaceFolder: Resource
+  private readonly configService: IConfigurationService
   private readonly autoSelection: IInterpreterAutoSelectionService
 
   constructor(@inject(IServiceContainer) serviceContainer: IServiceContainer) {
@@ -23,6 +25,7 @@ export class InterpreterDisplay implements IInterpreterDisplay {
     this.workspaceService = serviceContainer.get<IWorkspaceService>(IWorkspaceService)
     this.interpreterService = serviceContainer.get<IInterpreterService>(IInterpreterService)
     this.autoSelection = serviceContainer.get<IInterpreterAutoSelectionService>(IInterpreterAutoSelectionService)
+    this.configService = serviceContainer.get<IConfigurationService>(IConfigurationService)
 
     const application = serviceContainer.get<IApplicationShell>(IApplicationShell)
     const disposableRegistry = serviceContainer.get<Disposable[]>(IDisposableRegistry)
@@ -62,11 +65,16 @@ export class InterpreterDisplay implements IInterpreterDisplay {
     }
   }
   private async updateDisplay(workspaceFolder?: Uri): Promise<void> {
+    const hideInterpreterName = this.configService.getSettings().hideInterpreterName
     await this.autoSelection.autoSelectInterpreter(workspaceFolder)
     const interpreter = await this.interpreterService.getActiveInterpreter(workspaceFolder)
     this.currentlySelectedWorkspaceFolder = workspaceFolder
     if (interpreter) {
-      this.statusBar.text = interpreter.displayName!
+      if (hideInterpreterName) {
+        this.statusBar.text = ''
+      } else {
+        this.statusBar.text = interpreter.displayName!
+      }
       this.currentlySelectedInterpreterPath = interpreter.path
     } else {
       this.statusBar.text = 'No Python Interpreter'
