@@ -43,7 +43,7 @@ export interface ExecutionResult<T extends string | Buffer> {
 
 export interface IProcessService {
   execObservable(file: string, args: string[], options?: SpawnOptions): ObservableExecutionResult<string>
-  exec(file: string, args: string[], options?: SpawnOptions): Promise<ExecutionResult<string>>
+  exec(file: string, args: string[], options?: SpawnOptions, stdinContent?: string): Promise<ExecutionResult<string>>
   shellExec(command: string, options?: ShellOptions): Promise<ExecutionResult<string>>
 }
 
@@ -87,7 +87,7 @@ export interface IPythonExecutionService {
   execObservable(args: string[], options: SpawnOptions): ObservableExecutionResult<string>
   execModuleObservable(moduleName: string, args: string[], options: SpawnOptions): ObservableExecutionResult<string>
 
-  exec(args: string[], options: SpawnOptions): Promise<ExecutionResult<string>>
+  exec(args: string[], options: SpawnOptions, stdinContent?: string): Promise<ExecutionResult<string>>
   execModule(moduleName: string, args: string[], options: SpawnOptions): Promise<ExecutionResult<string>>
 }
 
