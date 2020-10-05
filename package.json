@@ -852,7 +852,6 @@
   "devDependencies": {
     "@chemzqm/tsconfig": "^0.0.3",
     "@chemzqm/tslint-config": "^1.0.18",
-    "@types/del": "^4.0.0",
     "@types/diff-match-patch": "^1.0.32",
     "@types/event-stream": "^3.3.34",
     "@types/fs-extra": "^5.0.5",
