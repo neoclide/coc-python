@@ -417,7 +417,7 @@ class JediCompletion(object):
                     "text": definition.name,
                     "type": self._get_definition_type(definition),
                     "raw_type": definition.type,
-                    "fileName": module_path,
+                    "fileName": str(module_path),
                     "container": container,
                     "range": definitionRange,
                     "description": definition.description,
