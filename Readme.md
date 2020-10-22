@@ -55,7 +55,7 @@ Except from `test`, `debug` and `datascience` features of [vscode-python](https:
   - Code navigation ("Go to", "Find all" references)
   - Code definition (Peek and hover definition, View signatures)
   - Rename refactoring
-  - Sorting import statements (use the `Python: Sort Imports` command)
+  - Sorting import statements (use `:CocCommand python.sortImports`)
 - Intellisense and autocomplete (including PEP 484 and PEP 526 support)
   - Ability to include custom module paths (e.g. include paths for libraries like Google App Engine, etc.; use the setting `python.autoComplete.extraPaths = []`)
 - Code formatting
