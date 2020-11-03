@@ -1,6 +1,6 @@
 {
   "name": "coc-python",
-  "version": "1.2.12",
+  "version": "1.2.13",
   "languageServerVersion": "0.2.92",
   "description": "Python extension for coc.nvim, forked from vscode-python.",
   "main": "lib/index.js",
