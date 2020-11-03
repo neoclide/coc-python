@@ -72,9 +72,9 @@ export class PythonExecutionService implements IPythonExecutionService {
     const opts: SpawnOptions = { ...options }
     return this.procService.execObservable(this.pythonPath, ['-m', moduleName, ...args], opts)
   }
-  public async exec(args: string[], options: SpawnOptions): Promise<ExecutionResult<string>> {
+  public async exec(args: string[], options: SpawnOptions, stdinContent?: string): Promise<ExecutionResult<string>> {
     const opts: SpawnOptions = { ...options }
-    return this.procService.exec(this.pythonPath, args, opts)
+    return this.procService.exec(this.pythonPath, args, opts, stdinContent)
   }
   public async execModule(moduleName: string, args: string[], options: SpawnOptions): Promise<ExecutionResult<string>> {
     const opts: SpawnOptions = { ...options }

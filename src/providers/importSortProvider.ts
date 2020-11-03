@@ -1,11 +1,10 @@
-import { Uri, workspace } from 'coc.nvim'
+import { Uri, workspace, Document } from 'coc.nvim'
 import { inject, injectable } from 'inversify'
 import { EOL } from 'os'
 import * as path from 'path'
 import { CancellationToken, Position, TextEdit, WorkspaceEdit } from 'vscode-languageserver-protocol'
-import { IApplicationShell, ICommandManager, IDocumentManager } from '../common/application/types'
+import { ICommandManager, IDocumentManager } from '../common/application/types'
 import { Commands, EXTENSION_ROOT_DIR, PYTHON_LANGUAGE, STANDARD_OUTPUT_CHANNEL } from '../common/constants'
-import { IFileSystem } from '../common/platform/types'
 import { IProcessServiceFactory, IPythonExecutionFactory } from '../common/process/types'
 import { IConfigurationService, IDisposableRegistry, IEditorUtils, ILogger, IOutputChannel } from '../common/types'
 import { IServiceContainer } from '../ioc/types'
@@ -26,6 +25,31 @@ export class SortImportsEditingProvider implements ISortImportsEditingProvider {
     this.editorUtils = serviceContainer.get<IEditorUtils>(IEditorUtils)
   }
 
+  private async generateIsortFixDiff(doc: Document, token?: CancellationToken): Promise<string> {
+    // Since version 5.5.2 isort supports reading from stdin AND generating a diff patch.
+    // For reference see: https://github.com/PyCQA/isort/issues/1469
+    const docUri = Uri.parse(doc.uri)
+    const docContent = doc.getDocumentContent()
+    const settings = this.configurationService.getSettings(docUri)
+    const { path: isortPath, args: userArgs } = settings.sortImports
+    const args = ['-', '--diff'].concat(userArgs)
+    const options = { throwOnStdErr: true, token }
+
+    if (token && token.isCancellationRequested) {
+      return
+    }
+
+    if (typeof isortPath === 'string' && isortPath.length > 0) {
+      const processService = await this.processServiceFactory.create(docUri)
+      return (await processService.exec(isortPath, args, options, docContent)).stdout
+    } else {
+      const importScript = path.join(EXTENSION_ROOT_DIR, 'pythonFiles', 'sortImports.py')
+      const commandString = [importScript].concat(args)
+      const processExeService = await this.pythonExecutionFactory.create({ resource: docUri })
+      return (await processExeService.exec(commandString, options, docContent)).stdout
+    }
+  }
+
   public async provideDocumentSortImportsEdits(uri: Uri, token?: CancellationToken): Promise<WorkspaceEdit | undefined> {
     let doc = workspace.getDocument(workspace.bufnr)
     if (doc.uri != uri.toString()) {
@@ -35,41 +59,9 @@ export class SortImportsEditingProvider implements ISortImportsEditingProvider {
     if (doc.lineCount <= 1) {
       return
     }
-    // isort does have the ability to read from the process input stream and return the formatted code out of the output stream.
-    // However they don't support returning the diff of the formatted text when reading data from the input stream.
-    // Yes getting text formatted that way avoids having to create a temporary file, however the diffing will have
-    // to be done here in node (extension), i.e. extension cpu, i.e. less responsive solution.
-    const importScript = path.join(EXTENSION_ROOT_DIR, 'pythonFiles', 'sortImports.py')
-    const fsService = this.serviceContainer.get<IFileSystem>(IFileSystem)
-    const tmpFile = doc.dirty ? await fsService.createTemporaryFile(path.extname(Uri.parse(doc.uri).fsPath)) : undefined
-    if (tmpFile) {
-      await fsService.writeFile(tmpFile.filePath, doc.getDocumentContent())
-    }
-    const settings = this.configurationService.getSettings(uri)
-    const isort = settings.sortImports.path
-    const filePath = tmpFile ? tmpFile.filePath : Uri.parse(doc.uri).fsPath
-    const args = [filePath, '--diff'].concat(settings.sortImports.args)
-    let diffPatch: string
 
-    if (token && token.isCancellationRequested) {
-      return
-    }
-    try {
-      if (typeof isort === 'string' && isort.length > 0) {
-        // Lets just treat this as a standard tool.
-        const processService = await this.processServiceFactory.create(Uri.parse(doc.uri))
-        diffPatch = (await processService.exec(isort, args, { throwOnStdErr: true, token })).stdout
-      } else {
-        const processExeService = await this.pythonExecutionFactory.create({ resource: Uri.parse(doc.uri) })
-        diffPatch = (await processExeService.exec([importScript].concat(args), { throwOnStdErr: true, token })).stdout
-      }
-
-      return this.editorUtils.getWorkspaceEditsFromPatch(doc.getDocumentContent(), diffPatch, Uri.parse(doc.uri))
-    } finally {
-      if (tmpFile) {
-        tmpFile.dispose()
-      }
-    }
+    const diffPatch = await this.generateIsortFixDiff(doc, token)
+    return this.editorUtils.getWorkspaceEditsFromPatch(doc.getDocumentContent(), diffPatch, Uri.parse(doc.uri))
   }
 
   public registerCommands() {

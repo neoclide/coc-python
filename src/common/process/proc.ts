@@ -89,10 +89,14 @@ export class ProcessService implements IProcessService {
       }
     }
   }
-  public exec(file: string, args: string[], options: SpawnOptions = {}): Promise<ExecutionResult<string>> {
+  public exec(file: string, args: string[], options: SpawnOptions = {}, stdinContent: string = ""): Promise<ExecutionResult<string>> {
     const spawnOptions = this.getDefaultOptions(options)
     const encoding = spawnOptions.encoding ? spawnOptions.encoding : 'utf8'
+
     const proc = spawn(file, args, spawnOptions)
+    proc.stdin.write(stdinContent)
+    proc.stdin.end()
+
     const deferred = createDeferred<ExecutionResult<string>>()
 
     if (options.token) {
