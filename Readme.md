@@ -168,7 +168,7 @@ Except from `test`, `debug` and `datascience` features of [vscode-python](https:
 
 ## F.A.Q
 
-**Q:** `"python.linting.enabled": false` not work when jedi disabled.
+**Q:** `"python.linting.enabled": false` does not work when jedi is disabled.
 
 **A:** That setting only works when python files are used, not MPLS, you have to use `"python.analysis.diagnosticEnabled": false` to disable diagnostics from language server.
 
@@ -176,7 +176,7 @@ Except from `test`, `debug` and `datascience` features of [vscode-python](https:
 
 **A:** It's bug of MPLS, checkout https://github.com/Microsoft/python-language-server/issues/832.
 
-**Q:** MPLS doesn't work with unsaved buffer.
+**Q:** coc-python doesn't work with unsaved buffers.
 
 **A:** Yes, it's not. You have to save your buffer to make it work.
 
