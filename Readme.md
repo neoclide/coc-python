@@ -1,10 +1,13 @@
 # coc-python
 
+**WARNING**: it's recommended to use
+[coc-pyright](https://github.com/fannheyward/coc-pyright) if you're using
+python3 or use [coc-jedi](https://github.com/pappasam/coc-jedi) if you're using
+jedi, the code of coc-python is too hard to maintain!
+
 Python extension for [coc.nvim](https://github.com/neoclide/coc.nvim), fork of
 [vscode-python](https://github.com/Microsoft/vscode-python) from commit
 [16899f6b13477786212f29eb3cb7a459b5ebf0a4](https://github.com/microsoft/vscode-python/commit/16899f6b13477786212f29eb3cb7a459b5ebf0a4).
-
-Basic working, but still **W.I.P**.
 
 Built with rich support for the Python language (for all actively supported
 versions of the language: 2.7, >=3.5), including features such as linting,
