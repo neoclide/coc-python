@@ -129,7 +129,7 @@ export function parseTags(
           lr.close()
           return
         }
-        const tag = parseTagsLine(workspaceFolder, line, query)
+        const tag = parseTagsLine(workspaceFolder, tagFile, line, query)
         if (tag) {
           tags.push(tag)
         }
@@ -144,7 +144,7 @@ export function parseTags(
     })
   })
 }
-function parseTagsLine(workspaceFolder: string, line: string, searchPattern: string): ITag | undefined {
+function parseTagsLine(workspaceFolder: string, tagFile: string, line: string, searchPattern: string): ITag | undefined {
   if (IsFileRegEx.test(line)) {
     return
   }
@@ -157,7 +157,7 @@ function parseTagsLine(workspaceFolder: string, line: string, searchPattern: str
   }
   let file = match.file
   if (!path.isAbsolute(file)) {
-    file = path.resolve(workspaceFolder, '.vscode', file)
+    file = path.resolve(path.resolve(workspaceFolder, path.dirname(tagFile)), file)
   }
 
   const symbolKind = CTagKinMapping.get(match.type) || SymbolKind.Null
