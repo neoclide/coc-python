@@ -43,6 +43,11 @@ export class LanguageServerExtensionActivationService implements IExtensionActiv
   }
 
   public async activate(resource: Resource): Promise<void> {
+    const configService = this.serviceContainer.get<IConfigurationService>(IConfigurationService)
+    const disableLanguageServer = configService.getSettings(resource).disableLanguageServer
+    if (disableLanguageServer) {
+      return
+    }
     let jedi = this.useJedi()
     if (!jedi) {
       if (this.lsActivatedWorkspaces.has(this.getWorkspacePathKey(resource))) {
