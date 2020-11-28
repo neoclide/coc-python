@@ -357,6 +357,12 @@
           "description": "List of suppressed diagnostic messages.",
           "scope": "resource"
         },
+        "python.analysis.memory.keepLibraryAst": {
+          "type": "boolean",
+          "default": false,
+          "description": "Allows code analysis to keep parser trees in memory. Increases memory consumption but may improve performance with large library analysis.",
+          "scope": "resource"
+        },
         "python.analysis.logLevel": {
           "type": "string",
           "enum": [
