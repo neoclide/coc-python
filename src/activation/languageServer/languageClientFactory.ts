@@ -49,12 +49,16 @@ export class BaseLanguageClientFactory implements ILanguageClientFactory {
 @injectable()
 export class DownloadedLanguageClientFactory implements ILanguageClientFactory {
   constructor(@inject(IPlatformData) private readonly platformData: IPlatformData,
+    @inject(IConfigurationService) private readonly configurationService: IConfigurationService,
     @inject(ILanguageServerFolderService) private readonly languageServerFolderService: ILanguageServerFolderService,
     @inject(IExtensionContext) private readonly context: IExtensionContext) { }
 
   public async createLanguageClient(_resource: Resource, clientOptions: LanguageClientOptions, env?: NodeJS.ProcessEnv): Promise<LanguageClient> {
+    let serverModule = this.configurationService.getSettings().languageServerPath;
     const languageServerFolder = await this.languageServerFolderService.getLanguageServerFolderName()
-    const serverModule = path.join(this.context.storagePath, languageServerFolder, this.platformData.engineExecutableName)
+    if(serverModule === "") {
+        serverModule = path.join(this.context.storagePath, languageServerFolder, this.platformData.engineExecutableName)
+    }
     const serverOptions: Executable = {
       command: serverModule,
       args: [],

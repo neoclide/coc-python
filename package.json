@@ -181,6 +181,12 @@
           "description": "Automatically update the language server.",
           "scope": "application"
         },
+        "python.languageServerPath": {
+            "type": "string",
+            "description": "Overrides the auto-installed Python Language server binary path.",
+            "default": "",
+            "scope": "resource"
+        },
         "python.disableInstallationCheck": {
           "type": "boolean",
           "default": false,
